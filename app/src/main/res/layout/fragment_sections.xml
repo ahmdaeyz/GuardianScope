@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.discover.sections.SectionsFragment">
+
+    <HorizontalScrollView
+        android:id="@+id/chips_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/sections_chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:checkedChip="@id/politics_chip"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/education_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/education"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@android:color/black"
+                app:checkedIcon="@drawable/dot_icon"
+                app:checkedIconEnabled="true"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipEndPadding="0dp"
+                app:chipIconSize="5dp"
+                app:iconEndPadding="0dp"
+                app:rippleColor="@null"
+                app:textStartPadding="4dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/fashion_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fashion"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@android:color/black"
+                app:checkedIcon="@drawable/dot_icon"
+                app:checkedIconEnabled="true"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipEndPadding="0dp"
+                app:chipIconSize="5dp"
+                app:iconEndPadding="0dp"
+                app:rippleColor="@null"
+                app:textStartPadding="4dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/environment_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/environment"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@android:color/black"
+                app:checkedIcon="@drawable/dot_icon"
+                app:checkedIconEnabled="true"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipEndPadding="0dp"
+                app:chipIconSize="5dp"
+                app:iconEndPadding="0dp"
+                app:rippleColor="@null"
+                app:textStartPadding="4dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/politics_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Politics"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@android:color/black"
+                app:checkedIcon="@drawable/dot_icon"
+                app:checkedIconEnabled="true"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipEndPadding="0dp"
+                app:chipIconSize="5dp"
+                app:iconEndPadding="0dp"
+                app:rippleColor="@null"
+                app:textStartPadding="4dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/food_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/food"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@android:color/black"
+                app:checkedIcon="@drawable/dot_icon"
+                app:checkedIconEnabled="true"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipEndPadding="0dp"
+                app:chipIconSize="5dp"
+                app:iconEndPadding="0dp"
+                app:rippleColor="@null"
+                app:textStartPadding="4dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/media_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/media"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@android:color/black"
+                app:checkedIcon="@drawable/dot_icon"
+                app:checkedIconEnabled="true"
+                app:chipBackgroundColor="@color/colorPrimary"
+                app:chipEndPadding="0dp"
+                app:chipIconSize="5dp"
+                app:iconEndPadding="0dp"
+                app:rippleColor="@null"
+                app:textStartPadding="4dp" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/articles_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        tools:listitem="@layout/article_layout"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@id/chips_scroll_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.DoubleBounce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:SpinKit_Color="@color/colorDot"
+        app:layout_constraintTop_toBottomOf="@id/chips_scroll_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+        android:id="@+id/info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:fontFamily="@font/abril_fatface"
+        android:textColor="@color/colorDot"
+        app:layout_constraintTop_toBottomOf="@id/chips_scroll_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
