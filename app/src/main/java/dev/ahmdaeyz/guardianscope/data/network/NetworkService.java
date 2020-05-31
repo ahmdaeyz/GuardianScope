@@ -5,7 +5,7 @@ import java.util.List;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import io.reactivex.Single;
 
-interface NetworkService {
+public interface NetworkService {
     Single<List<Article>> getHeadlineArticles();
 
     Single<List<Article>> getSectionsArticles(String... sections);
