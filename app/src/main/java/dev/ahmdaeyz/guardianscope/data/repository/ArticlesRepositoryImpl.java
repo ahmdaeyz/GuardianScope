@@ -1,5 +1,7 @@
 package dev.ahmdaeyz.guardianscope.data.repository;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -8,27 +10,46 @@ import dev.ahmdaeyz.guardianscope.data.network.NetworkService;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 
-class ArticlesRepositoryImpl implements ArticlesRepository {
+public class ArticlesRepositoryImpl implements ArticlesRepository {
     private final NetworkService networkService;
+    private static ArticlesRepositoryImpl INSTANCE;
 
-    ArticlesRepositoryImpl(NetworkService networkService) {
+    private ArticlesRepositoryImpl(NetworkService networkService) {
         this.networkService = networkService;
+    }
+
+    public static ArticlesRepositoryImpl initRepository(NetworkService networkService) {
+        if (INSTANCE != null) {
+            throw new RuntimeException("you can't reinitialize ArticlesRepository, Already is.");
+        } else {
+            INSTANCE = new ArticlesRepositoryImpl(networkService);
+            return INSTANCE;
+        }
+    }
+
+    public static ArticlesRepositoryImpl getInstance() {
+        if (INSTANCE != null) {
+            return INSTANCE;
+        } else {
+            throw new RuntimeException("you have to initialize the repository first.");
+        }
     }
 
     @Override
     public Observable<List<Article>> getTrendingArticles() {
-        return Observable.interval(30, TimeUnit.MINUTES)
+        return Observable.interval(0, 30, TimeUnit.MINUTES)
                 .flatMap((time) -> networkService
                         .getHeadlineArticles()
                         .toObservable());
     }
 
     @Override
-    public Observable<List<Article>> getSectionsArticles(String... sections) {
-        return Observable.interval(30, TimeUnit.MINUTES)
+    public Observable<List<Article>> getSectionsArticles(List<String> sections) {
+        return Observable.interval(0, 30, TimeUnit.MINUTES)
                 .flatMap((time) -> networkService
                         .getSectionsArticles(sections)
-                        .toObservable());
+                        .toObservable())
+                .doOnNext((articles -> Log.d("Repository", articles.toString())));
     }
 
     @Override
