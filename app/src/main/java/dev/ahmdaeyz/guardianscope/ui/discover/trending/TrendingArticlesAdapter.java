@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import dev.ahmdaeyz.guardianscope.data.entities.Article;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.databinding.TrendingArticleLayoutBinding;
 import dev.ahmdaeyz.guardianscope.ui.discover.common.ArticlesAdapter;
 

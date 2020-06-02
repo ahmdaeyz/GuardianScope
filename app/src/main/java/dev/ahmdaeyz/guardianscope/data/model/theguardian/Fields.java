@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.data.entities;
+package dev.ahmdaeyz.guardianscope.data.model.theguardian;
 
 public class Fields {
     private String headline;

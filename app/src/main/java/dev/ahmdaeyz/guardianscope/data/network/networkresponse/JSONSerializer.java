@@ -7,11 +7,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.ahmdaeyz.guardianscope.data.entities.Article;
-import dev.ahmdaeyz.guardianscope.data.entities.Fields;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.Fields;
 
-public class JSONParser {
-    public JSONParser() {
+public class JSONSerializer {
+    public JSONSerializer() {
 
     }
 

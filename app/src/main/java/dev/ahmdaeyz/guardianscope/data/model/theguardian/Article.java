@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.data.entities;
+package dev.ahmdaeyz.guardianscope.data.model.theguardian;
 
 public class Article {
     public Article(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, Fields fields) {
