@@ -8,5 +8,5 @@ import io.reactivex.Single;
 public interface NetworkService {
     Single<List<Article>> getHeadlineArticles();
 
-    Single<List<Article>> getSectionsArticles(String... sections);
+    Single<List<Article>> getSectionsArticles(List<String> sections);
 }
