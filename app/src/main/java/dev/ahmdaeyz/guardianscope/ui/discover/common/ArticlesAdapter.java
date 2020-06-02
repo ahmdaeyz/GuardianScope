@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import dev.ahmdaeyz.guardianscope.data.entities.Article;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 
 public abstract class ArticlesAdapter<V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter {
 
