@@ -1,6 +1,7 @@
 package dev.ahmdaeyz.guardianscope.data.network;
 
 import android.net.Uri;
+import android.util.Log;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
@@ -14,15 +15,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.data.network.networkresponse.JSONSerializer;
 import io.reactivex.Single;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.SingleSubject;
 
 public class BasicNetworkService implements NetworkService {
     private final String PAGE_SIZE = "50";
@@ -33,7 +32,7 @@ public class BasicNetworkService implements NetworkService {
 
     }
 
-    public Single<List<Article>> getSectionsArticles(String... sections) {
+    public Single<List<Article>> getSectionsArticles(List<String> sections) {
         URL queryURL = querySections(sections);
         return getArticles(queryURL);
     }
@@ -46,13 +45,12 @@ public class BasicNetworkService implements NetworkService {
     private Single<List<Article>> getArticles(URL url) {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
-        List<Article> articles = new ArrayList<>();
-        PublishSubject<List<Article>> articlesSubject = PublishSubject.create();
+        SingleSubject<List<Article>> articlesSubject = SingleSubject.create();
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
-            urlConnection.setReadTimeout(15000);
-            urlConnection.setConnectTimeout(30000);
+            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(5000);
             urlConnection.connect();
             if (urlConnection.getResponseCode() != 200) {
                 articlesSubject.onError(new Exception("Couldn't get Articles with" + url.toString()));
@@ -60,8 +58,14 @@ public class BasicNetworkService implements NetworkService {
                 inputStream = urlConnection.getInputStream();
                 JSONSerializer parser = new JSONSerializer();
                 String textResponse = stringifyInputStream(inputStream);
-                articlesSubject.onNext(parser.parse(textResponse));
-                articlesSubject.onComplete();
+                Log.d("NetworkResponse", textResponse);
+                List<Article> _articles = parser.parse(textResponse);
+                if (_articles != null) {
+                    Log.d("Network", _articles.toString());
+                    articlesSubject.onSuccess(_articles);
+                } else {
+                    articlesSubject.onError(new Exception("couldn't get response with url: " + url.toString()));
+                }
             }
         } catch (Exception e) {
             articlesSubject.onError(e);
@@ -77,10 +81,10 @@ public class BasicNetworkService implements NetworkService {
                 }
             }
         }
-        return articlesSubject.singleOrError();
+        return articlesSubject;
     }
 
-    private URL querySections(String... sections) {
+    private URL querySections(List<String> sections) {
         Uri baseUri = getUriWithBaseQueries();
         URL url = null;
         try {
@@ -88,7 +92,7 @@ public class BasicNetworkService implements NetworkService {
                     baseUri
                             .buildUpon().appendQueryParameter(
                             "section",
-                            Arrays.stream(sections).collect(Collectors.joining("|"))
+                            sections.stream().collect(Collectors.joining("|"))
                     ).build().toString()
             );
         } catch (MalformedURLException e) {
