@@ -6,10 +6,10 @@ import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 
-interface ArticlesRepository {
+public interface ArticlesRepository {
     Observable<List<Article>> getTrendingArticles();
 
-    Observable<List<Article>> getSectionsArticles(String... sections);
+    Observable<List<Article>> getSectionsArticles(List<String> sections);
 
     Completable bookMarkArticle(Article article);
 
