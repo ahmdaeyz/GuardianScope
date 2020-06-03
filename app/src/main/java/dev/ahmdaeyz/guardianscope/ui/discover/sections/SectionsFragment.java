@@ -85,6 +85,12 @@ public class SectionsFragment extends Fragment {
                         chip.setTextAppearance(R.style.TextAppearance_MaterialComponents_Body2);
                     }
                 }
+            } else {
+                for (Chip chip : chips) {
+                    if (chip.getText().toString().equals(viewModel.currentSection.getValue())) {
+                        chip.setChecked(true);
+                    }
+                }
             }
         });
     }
