@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.ui.discover.trending;
+package dev.ahmdaeyz.guardianscope.ui.browser.discover.sections;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -7,13 +7,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
-import dev.ahmdaeyz.guardianscope.databinding.TrendingArticleLayoutBinding;
-import dev.ahmdaeyz.guardianscope.ui.discover.common.ArticlesAdapter;
+import dev.ahmdaeyz.guardianscope.databinding.ArticleLayoutBinding;
+import dev.ahmdaeyz.guardianscope.ui.browser.discover.common.ArticlesAdapter;
 
-import static dev.ahmdaeyz.guardianscope.ui.discover.common.Binding.bindImageViewWithRoundCorners;
-import static dev.ahmdaeyz.guardianscope.ui.discover.common.Binding.formatDate;
+import static dev.ahmdaeyz.guardianscope.ui.browser.discover.common.Binding.bindImageViewWithRoundCorners;
+import static dev.ahmdaeyz.guardianscope.ui.browser.discover.common.Binding.formatDate;
 
-public class TrendingArticlesAdapter extends ArticlesAdapter<TrendingArticlesAdapter.ViewHolder> {
+public class SectionsArticlesAdapter extends ArticlesAdapter<SectionsArticlesAdapter.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -28,22 +28,21 @@ public class TrendingArticlesAdapter extends ArticlesAdapter<TrendingArticlesAda
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TrendingArticleLayoutBinding binding;
+        private final ArticleLayoutBinding binding;
 
-        public ViewHolder(TrendingArticleLayoutBinding binding) {
+        public ViewHolder(ArticleLayoutBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
         static ViewHolder from(ViewGroup parent) {
-            TrendingArticleLayoutBinding binding = TrendingArticleLayoutBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            ArticleLayoutBinding binding = ArticleLayoutBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new ViewHolder(binding);
         }
 
         public void bind(Article item, OnItemClickListener onItemClickListener) {
-            binding.articleAuthorName.setText("By " + item.getFields().getAuthor().replace("(new)", ""));
-            binding.articleTitle.setText(item.getFields().getHeadline());
-            binding.sectionName.setText(item.getSectionName());
+            binding.articleAuthorName.setText(item.getFields().getAuthor());
+            binding.articleTitle.setText(item.getWebTitle());
             binding.articlePubDate.setText(formatDate(item.getWebPublicationDate()));
             bindImageViewWithRoundCorners(binding.articleThumbnail, item.getFields().getThumbnail());
             binding.getRoot().setOnClickListener((view) -> {

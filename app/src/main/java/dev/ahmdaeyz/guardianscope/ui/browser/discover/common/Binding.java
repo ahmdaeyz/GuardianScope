@@ -1,20 +1,12 @@
-package dev.ahmdaeyz.guardianscope.ui.discover.common;
+package dev.ahmdaeyz.guardianscope.ui.browser.discover.common;
 
 import android.widget.ImageView;
 
-import androidx.lifecycle.Transformations;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 
 import dev.ahmdaeyz.guardianscope.R;

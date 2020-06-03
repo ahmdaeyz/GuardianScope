@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.ui.discover.trending;
+package dev.ahmdaeyz.guardianscope.ui.browser.discover.trending;
 
 import android.util.Log;
 

@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.ui.discover.trending;
+package dev.ahmdaeyz.guardianscope.ui.browser.discover.sections;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -6,16 +6,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 
-class TrendingViewModelFactory implements ViewModelProvider.Factory {
+class SectionsViewModelFactory implements ViewModelProvider.Factory {
     final private ArticlesRepository articlesRepository;
 
-    TrendingViewModelFactory(ArticlesRepository articlesRepository) {
+    SectionsViewModelFactory(ArticlesRepository articlesRepository) {
         this.articlesRepository = articlesRepository;
     }
+
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new TrendingViewModel(articlesRepository);
+        return (T) new SectionsViewModel(articlesRepository);
     }
 }
