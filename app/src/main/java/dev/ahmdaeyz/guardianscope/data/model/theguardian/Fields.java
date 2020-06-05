@@ -1,5 +1,9 @@
 package dev.ahmdaeyz.guardianscope.data.model.theguardian;
 
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+
+@Parcel
 public class Fields {
     private String headline;
     private String author;
@@ -8,6 +12,7 @@ public class Fields {
     private String thumbnail;
     private Boolean isLive;
 
+    @ParcelConstructor
     public Fields(String headline, String author, String body, Integer wordCount, String thumbnail, Boolean isLive) {
         this.headline = headline;
         this.author = author;
