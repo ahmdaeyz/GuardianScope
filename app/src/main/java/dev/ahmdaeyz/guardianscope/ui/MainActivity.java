@@ -2,20 +2,25 @@ package dev.ahmdaeyz.guardianscope.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import dev.ahmdaeyz.guardianscope.R;
-import dev.ahmdaeyz.guardianscope.databinding.ActivityMainBinding;
-import dev.ahmdaeyz.guardianscope.ui.browser.BrowserFragment;
+import org.parceler.Parcels;
 
-public class MainActivity extends AppCompatActivity {
+import dev.ahmdaeyz.guardianscope.R;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
+import dev.ahmdaeyz.guardianscope.databinding.ActivityMainBinding;
+import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
+import dev.ahmdaeyz.guardianscope.ui.browser.BrowserFragment;
+import dev.ahmdaeyz.guardianscope.ui.reader.ReaderFragment;
+
+public class MainActivity extends AppCompatActivity implements NavigateFrom.Reader, NavigateFrom.Browsers.Discover {
     private ActivityMainBinding binding;
     FragmentManager fragmentManager;
-    Fragment browserFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +28,13 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         fragmentManager = getSupportFragmentManager();
+        BrowserFragment browserFragment;
+        ReaderFragment readerFragment;
         if (savedInstanceState != null) {
             browserFragment = (BrowserFragment) fragmentManager.getFragment(savedInstanceState, "BrowserFragment");
+            readerFragment = (ReaderFragment) fragmentManager.getFragment(savedInstanceState, "ReaderFragment");
         } else {
-            BrowserFragment browserFragment = new BrowserFragment();
+            browserFragment = new BrowserFragment();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, browserFragment, "browser_fragment")
                     .commit();
@@ -36,7 +44,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        fragmentManager.putFragment(outState, "BrowserFragment", fragmentManager.findFragmentByTag("browser_fragment"));
+        if (fragmentManager.findFragmentByTag("browser_fragment") != null) {
+            fragmentManager.putFragment(outState, "BrowserFragment", fragmentManager.findFragmentByTag("browser_fragment"));
+        }
+        if (fragmentManager.findFragmentByTag("reader_fragment") != null) {
+            fragmentManager.putFragment(outState, "ReaderFragment", fragmentManager.findFragmentByTag("reader_fragment"));
+        }
     }
 
+    @Override
+    public void onBackPressedFromFragment() {
+        fragmentManager.popBackStack("reader_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    @Override
+    public void toReader(Article article) {
+        ReaderFragment readerFragment = ReaderFragment.newInstance(Parcels.wrap(article));
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, readerFragment, "reader_fragment")
+                .addToBackStack("reader_fragment")
+                .commit();
+    }
+
+    public void updateStatusBarColor(int colorResId) {// Color must be in hexadecimal fromat
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(getColor(colorResId));
+    }
 }
