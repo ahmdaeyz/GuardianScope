@@ -61,7 +61,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
 
     @Override
     public Completable bookMarkArticle(Article article) {
-        return null;
+        return Completable.complete();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
 
     @Override
     public Completable favouriteArticle(Article article) {
-        return null;
+        return Completable.complete();
     }
 
     @Override
