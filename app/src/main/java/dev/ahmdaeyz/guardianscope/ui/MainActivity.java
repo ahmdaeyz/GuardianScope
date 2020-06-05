@@ -1,99 +1,74 @@
 package dev.ahmdaeyz.guardianscope.ui;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Window;
+import android.view.WindowManager;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-
+import org.parceler.Parcels;
 
 import dev.ahmdaeyz.guardianscope.R;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.databinding.ActivityMainBinding;
-import dev.ahmdaeyz.guardianscope.ui.discover.DiscoverFragment;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.BehaviorSubject;
+import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
+import dev.ahmdaeyz.guardianscope.ui.browser.BrowserFragment;
+import dev.ahmdaeyz.guardianscope.ui.reader.ReaderFragment;
 
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigateFrom.Reader, NavigateFrom.Browsers.Discover {
     private ActivityMainBinding binding;
     FragmentManager fragmentManager;
-    private BehaviorSubject<Boolean> isNetworkConnected = BehaviorSubject.createDefault(false);
-    private CompositeDisposable disposables = new CompositeDisposable();
-    DiscoverFragment discoverFragment;
-    NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         fragmentManager = getSupportFragmentManager();
-        registerNetworkCallback();
-
-        if (savedInstanceState!=null){
-            discoverFragment = (DiscoverFragment) fragmentManager.getFragment(savedInstanceState,"DiscoverFragment");
-        }else{
-            discoverFragment = new DiscoverFragment();
+        BrowserFragment browserFragment;
+        ReaderFragment readerFragment;
+        if (savedInstanceState != null) {
+            browserFragment = (BrowserFragment) fragmentManager.getFragment(savedInstanceState, "BrowserFragment");
+            readerFragment = (ReaderFragment) fragmentManager.getFragment(savedInstanceState, "ReaderFragment");
+        } else {
+            browserFragment = new BrowserFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, browserFragment, "browser_fragment")
+                    .commit();
         }
-        disposables.add(
-        isNetworkConnected
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean isConnected) throws Exception {
-                        if (isConnected){
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.fragment_container, discoverFragment, "discover_fragment")
-                                    .commit();
-                        }else{
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.fragment_container,noConnectionFragment, "no_connection_fragment")
-                                    .commit();
-                        }
-                    }
-                }));
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        fragmentManager.putFragment(outState,"DiscoverFragment",fragmentManager.findFragmentByTag("discover_fragment"));
-    }
-
-    public void registerNetworkCallback() {
-        try {
-            ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-            connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback(){
-                @Override
-                public void onLost(@NonNull Network network) {
-                    isNetworkConnected.onNext(false);
-                }
-
-                @Override
-                public void onUnavailable() {
-                    isNetworkConnected.onNext(false);
-                }
-
-                @Override
-                public void onAvailable(@NonNull Network network) {
-                    isNetworkConnected.onNext(true);
-                }
-
-            });
-        } catch (Exception e) {
-            isNetworkConnected.onNext(false);
+        if (fragmentManager.findFragmentByTag("browser_fragment") != null) {
+            fragmentManager.putFragment(outState, "BrowserFragment", fragmentManager.findFragmentByTag("browser_fragment"));
+        }
+        if (fragmentManager.findFragmentByTag("reader_fragment") != null) {
+            fragmentManager.putFragment(outState, "ReaderFragment", fragmentManager.findFragmentByTag("reader_fragment"));
         }
     }
 
+    @Override
+    public void onBackPressedFromFragment() {
+        fragmentManager.popBackStack("reader_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disposables.clear();
+    public void toReader(Article article) {
+        ReaderFragment readerFragment = ReaderFragment.newInstance(Parcels.wrap(article));
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, readerFragment, "reader_fragment")
+                .addToBackStack("reader_fragment")
+                .commit();
+    }
+
+    public void updateStatusBarColor(int colorResId) {// Color must be in hexadecimal fromat
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(getColor(colorResId));
     }
 }

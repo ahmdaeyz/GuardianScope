@@ -1,12 +1,11 @@
-package dev.ahmdaeyz.guardianscope.ui.discover;
+package dev.ahmdaeyz.guardianscope.ui.browser.discover;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import dev.ahmdaeyz.guardianscope.databinding.FragmentDiscoverBinding;
 

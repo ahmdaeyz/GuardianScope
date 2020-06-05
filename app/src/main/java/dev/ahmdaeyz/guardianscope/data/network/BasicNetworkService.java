@@ -24,7 +24,7 @@ import io.reactivex.Single;
 import io.reactivex.subjects.SingleSubject;
 
 public class BasicNetworkService implements NetworkService {
-    private final String PAGE_SIZE = "50";
+    private final String PAGE_SIZE = "30";
     private final String API_KEY = "abbbdc43-bfd3-498c-afbf-41e9f87bbbb8";
     private final String BASE_URL = "https://content.guardianapis.com/search";
 
@@ -33,12 +33,12 @@ public class BasicNetworkService implements NetworkService {
     }
 
     public Single<List<Article>> getSectionsArticles(List<String> sections) {
-        URL queryURL = querySections(sections);
+        URL queryURL = querySections(sections, 30);
         return getArticles(queryURL);
     }
 
     public Single<List<Article>> getHeadlineArticles() {
-        URL queryURL = queryHeadlines();
+        URL queryURL = queryHeadlines(20);
         return getArticles(queryURL);
     }
 
@@ -84,8 +84,8 @@ public class BasicNetworkService implements NetworkService {
         return articlesSubject;
     }
 
-    private URL querySections(List<String> sections) {
-        Uri baseUri = getUriWithBaseQueries();
+    private URL querySections(List<String> sections, int pageSize) {
+        Uri baseUri = getUriWithBaseQueries(pageSize);
         URL url = null;
         try {
             url = new URL(
@@ -101,8 +101,8 @@ public class BasicNetworkService implements NetworkService {
         return url;
     }
 
-    private URL queryHeadlines() {
-        Uri baseUri = getUriWithBaseQueries();
+    private URL queryHeadlines(int pageSize) {
+        Uri baseUri = getUriWithBaseQueries(pageSize);
         URL url = null;
         try {
             url = new URL(
@@ -118,14 +118,14 @@ public class BasicNetworkService implements NetworkService {
         return url;
     }
 
-    private Uri getUriWithBaseQueries() {
+    private Uri getUriWithBaseQueries(int pageSize) {
         Uri uriToGet = Uri.parse(BASE_URL);
         uriToGet = uriToGet.buildUpon()
                 .appendQueryParameter("type", "article|liveblog")
                 .appendQueryParameter("from-date", prepareDate()[0])
                 .appendQueryParameter("to-date", prepareDate()[1])
                 .appendQueryParameter("show-fields", "all")
-                .appendQueryParameter("page-size", PAGE_SIZE)
+                .appendQueryParameter("page-size", String.valueOf(pageSize))
                 .appendQueryParameter("api-key", API_KEY).build();
         return uriToGet;
     }

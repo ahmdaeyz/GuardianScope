@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="300">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@id/section_name" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@id/article_title" />
+
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@id/article_author_image" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@id/article_pub_date" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="20"
+                motion:motionTarget="@id/share_to_twitter_button" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="20"
+                motion:motionTarget="@id/share_button" />
+        </KeyFrameSet>
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@id/article_image"
+            motion:touchAnchorSide="bottom" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint android:id="@id/app_bar">
+            <CustomAttribute
+                motion:attributeName="background"
+                motion:customColorDrawableValue="@android:color/transparent" />
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@id/article_image"
+            motion:layout_constraintBottom_toBottomOf="@id/app_bar"
+            motion:layout_constraintEnd_toEndOf="@id/app_bar"
+            motion:layout_constraintStart_toStartOf="@id/app_bar"
+            motion:layout_constraintTop_toTopOf="@id/app_bar" />
+        <Constraint android:id="@id/article_title">
+            <PropertySet android:visibility="gone" />
+        </Constraint>
+        <Constraint android:id="@id/section_name">
+            <PropertySet android:visibility="gone" />
+        </Constraint>
+        <Constraint android:id="@id/article_author_image">
+            <PropertySet android:visibility="gone" />
+        </Constraint>
+        <Constraint android:id="@id/article_pub_date">
+            <PropertySet android:visibility="gone" />
+        </Constraint>
+        <Constraint android:id="@id/share_to_twitter_button">
+            <PropertySet android:visibility="gone" />
+        </Constraint>
+        <Constraint android:id="@id/share_button">
+            <PropertySet android:visibility="gone" />
+        </Constraint>
+
+        <Constraint android:id="@id/app_bar">
+            <CustomAttribute
+                motion:attributeName="background"
+                motion:customColorDrawableValue="@android:color/white" />
+        </Constraint>
+    </ConstraintSet>
+</MotionScene>

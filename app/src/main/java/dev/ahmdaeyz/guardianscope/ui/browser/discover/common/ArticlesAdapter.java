@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.ui.discover.common;
+package dev.ahmdaeyz.guardianscope.ui.browser.discover.common;
 
 import android.view.View;
 

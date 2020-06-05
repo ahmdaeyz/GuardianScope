@@ -22,4 +22,13 @@
     <string name="check_connectivity">Please check your internet connection.</string>
     <string name="no_internet_connection_cd">No internet connection</string>
     <string name="politics">Politics</string>
+    <string name="go_back_button_cd">Go back button</string>
+    <string name="favourite_button_cd">Favourite button</string>
+    <string name="article_image_cd">Article image</string>
+    <string name="share_to_facebook_cd">Share to Facebook</string>
+    <string name="share_button_cd">Share button</string>
+    <string name="share_to_twitter_button_cd">Share to Twitter button</string>
+    <string name="favourite_success">Article favourited Successfully!</string>
+    <string name="favourite_failure">Article wasn\'t favourited</string>
+    <string name="unfavourite_success">Article was unfavoured successfully.</string>
 </resources>

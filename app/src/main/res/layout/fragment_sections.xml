@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.discover.sections.SectionsFragment">
+    tools:context=".ui.browser.discover.sections.SectionsFragment">
 
     <HorizontalScrollView
         android:id="@+id/chips_scroll_view"

@@ -1,13 +1,13 @@
-package dev.ahmdaeyz.guardianscope.ui.discover.sections;
+package dev.ahmdaeyz.guardianscope.ui.browser.discover.sections;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +21,7 @@ import dev.ahmdaeyz.guardianscope.R;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentSectionsBinding;
+import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
 import io.reactivex.disposables.CompositeDisposable;
 
 
@@ -29,11 +30,22 @@ public class SectionsFragment extends Fragment {
     private SectionsArticlesAdapter adapter;
     private SectionsViewModel viewModel;
     private CompositeDisposable disposable = new CompositeDisposable();
+    private NavigateFrom.Browsers.Discover navigateFromDiscover;
 
     public SectionsFragment() {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            navigateFromDiscover = (NavigateFrom.Browsers.Discover) context;
+        } catch (ClassCastException e) {
+            Log.e("SectionsFragment", "Parent Activity must implement NavigateFrom.Browsers.Discover");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,11 +75,7 @@ public class SectionsFragment extends Fragment {
             }
         });
         adapter.setOnItemClickListener((view, article) -> {
-            Intent openUrlInABrowser = new Intent(Intent.ACTION_VIEW);
-            openUrlInABrowser.setData(Uri.parse(article.getWebUrl()));
-            if (openUrlInABrowser.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivity(openUrlInABrowser);
-            }
+            navigateFromDiscover.toReader(article);
         });
         return binding.getRoot();
     }

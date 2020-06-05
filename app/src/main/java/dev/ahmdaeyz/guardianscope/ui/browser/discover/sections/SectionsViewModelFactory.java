@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.ui.discover.sections;
+package dev.ahmdaeyz.guardianscope.ui.browser.discover.sections;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
