@@ -2,6 +2,8 @@ package dev.ahmdaeyz.guardianscope.data.repository;
 
 import android.util.Log;
 
+import org.threeten.bp.LocalDateTime;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -13,9 +15,11 @@ import io.reactivex.Observable;
 public class ArticlesRepositoryImpl implements ArticlesRepository {
     private final NetworkService networkService;
     private static ArticlesRepositoryImpl INSTANCE;
+    private LocalDateTime lastTimeUpdated;
 
     private ArticlesRepositoryImpl(NetworkService networkService) {
         this.networkService = networkService;
+        this.lastTimeUpdated = LocalDateTime.of(1999, 4, 3, 4, 5);
     }
 
     public static ArticlesRepositoryImpl initRepository(NetworkService networkService) {
@@ -38,9 +42,12 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     @Override
     public Observable<List<Article>> getTrendingArticles() {
         return Observable.interval(0, 30, TimeUnit.MINUTES)
-                .flatMap((time) -> networkService
-                        .getHeadlineArticles()
-                        .toObservable());
+                .flatMap((time) -> {
+                    lastTimeUpdated = LocalDateTime.now();
+                    return networkService
+                            .getHeadlineArticles()
+                            .toObservable();
+                });
     }
 
     @Override
@@ -76,4 +83,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     public Observable<List<Article>> search(String keyword) {
         return null;
     }
+
+    @Override
+    public LocalDateTime getLastTimeUpdated() {
+        return lastTimeUpdated;
+    }
+
 }
