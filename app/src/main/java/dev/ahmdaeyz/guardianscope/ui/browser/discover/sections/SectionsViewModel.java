@@ -6,8 +6,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.threeten.bp.LocalDateTime;
+
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
@@ -52,7 +53,7 @@ class SectionsViewModel extends ViewModel {
     private void getArticles() {
         disposables.add(
                 sections
-                        .filter((Objects::nonNull))
+                        .filter((theSections) -> !theSections.isEmpty() && LocalDateTime.now().minusMinutes(30).isAfter(repository.getLastTimeUpdated()))
                         .flatMap(repository::getSectionsArticles)
                         .cache()
                         .subscribeOn(Schedulers.io())
