@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "27.0.3"
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "dev.ahmdaeyz.guardianscope"
@@ -37,7 +37,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta6'
 
     implementation 'com.google.android.material:material:1.1.0'
 
@@ -60,6 +60,9 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.13'
 
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
+
+    implementation 'org.sufficientlysecure:html-textview:3.9'
+
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
