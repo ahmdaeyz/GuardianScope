@@ -11,6 +11,9 @@ import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.data.network.NetworkService;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ArticlesRepositoryImpl implements ArticlesRepository {
     private final NetworkService networkService;
@@ -87,6 +90,14 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     @Override
     public LocalDateTime getLastTimeUpdated() {
         return lastTimeUpdated;
+    }
+
+    @Override
+    public Single<Article> getArticle(String apiUrl) {
+        return networkService.getArticle(apiUrl)
+                .cache()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }
