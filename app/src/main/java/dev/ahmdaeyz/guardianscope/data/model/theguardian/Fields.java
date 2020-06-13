@@ -1,5 +1,6 @@
 package dev.ahmdaeyz.guardianscope.data.model.theguardian;
 
+
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
@@ -48,11 +49,11 @@ public class Fields {
 
     @Override
     public String toString() {
-        return "{headline: "+headline+
-                " , author: "+author+
-                " , body: "+ body.isEmpty()+
-                " , wordCount: "+wordCount+
-                " , thumbnail: "+thumbnail+
-                " , isLive: "+isLive+"}";
+        return "{headline: " + headline +
+                " , author: " + author +
+                " , body: " + body +
+                " , wordCount: " + wordCount +
+                " , thumbnail: " + thumbnail +
+                " , isLive: " + isLive + "}";
     }
 }
