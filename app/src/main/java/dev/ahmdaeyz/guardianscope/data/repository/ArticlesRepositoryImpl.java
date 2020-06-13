@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.BookmarkedArticle;
 import dev.ahmdaeyz.guardianscope.data.network.NetworkService;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -68,17 +70,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     }
 
     @Override
-    public Observable<List<Article>> getBookmarks() {
-        return null;
-    }
-
-    @Override
-    public Completable favouriteArticle(Article article) {
-        return Completable.complete();
-    }
-
-    @Override
-    public Observable<List<Article>> getFavourites() {
+    public Observable<List<BookmarkedArticle>> getBookmarks() {
         return null;
     }
 
@@ -93,7 +85,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     }
 
     @Override
-    public Single<Article> getArticle(String apiUrl) {
+    public Single<ArticleWithBody> getArticle(String apiUrl) {
         return networkService.getArticle(apiUrl)
                 .cache()
                 .subscribeOn(Schedulers.io())

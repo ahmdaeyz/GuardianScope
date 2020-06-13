@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Fields;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.FieldsWithBody;
 import dev.ahmdaeyz.guardianscope.data.network.networkresponse.articleresponse.Content;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -35,7 +37,6 @@ public class GuardianScopeNetworkService implements NetworkService {
                                 resultsItem.getApiUrl(),
                                 new Fields(resultsItem.getFields().getHeadline(),
                                         resultsItem.getFields().getByline(),
-                                        null,
                                         resultsItem.getFields().getWordcount(),
                                         resultsItem.getFields().getThumbnail(),
                                         true)
@@ -59,7 +60,6 @@ public class GuardianScopeNetworkService implements NetworkService {
                                 resultsItem.getApiUrl(),
                                 new Fields(resultsItem.getFields().getHeadline(),
                                         resultsItem.getFields().getByline(),
-                                        null,
                                         resultsItem.getFields().getWordcount(),
                                         resultsItem.getFields().getThumbnail(),
                                         true)
@@ -67,25 +67,27 @@ public class GuardianScopeNetworkService implements NetworkService {
     }
 
     @Override
-    public Single<Article> getArticle(String apiUrl) {
-        return (Single<Article>) networkAPI.getArticle(
+    public Single<ArticleWithBody> getArticle(String apiUrl) {
+        return networkAPI.getArticle(
                 apiUrl,
                 "headline,thumbnail,byline,wordcount,body"
         ).flatMap((articleResponse) -> {
             Content articleContent = articleResponse.getResponse().getContent();
-            return Single.just(new Article(
+            return Single.just(new ArticleWithBody(
                     articleContent.getId(),
                     articleContent.getSectionName(),
                     articleContent.getWebPublicationDate(),
                     articleContent.getWebTitle(),
                     articleContent.getWebUrl(),
                     articleContent.getApiUrl(),
-                    new Fields(articleContent.getFields().getHeadline(),
+                    new FieldsWithBody(
+                            articleContent.getFields().getHeadline(),
                             articleContent.getFields().getByline(),
-                            articleContent.getFields().getBody(),
                             articleContent.getFields().getWordcount(),
                             articleContent.getFields().getThumbnail(),
-                            true)
+                            articleContent.getFields().getIsLive(),
+                            articleContent.getFields().getBody()
+                    )
             ));
         });
 

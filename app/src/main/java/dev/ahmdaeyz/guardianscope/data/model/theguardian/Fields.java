@@ -8,16 +8,14 @@ import org.parceler.ParcelConstructor;
 public class Fields {
     private String headline;
     private String author;
-    private String body;
     private Integer wordCount;
     private String thumbnail;
     private Boolean isLive;
 
     @ParcelConstructor
-    public Fields(String headline, String author, String body, Integer wordCount, String thumbnail, Boolean isLive) {
+    public Fields(String headline, String author, Integer wordCount, String thumbnail, Boolean isLive) {
         this.headline = headline;
         this.author = author;
-        this.body = body;
         this.wordCount = wordCount;
         this.thumbnail = thumbnail;
         this.isLive = isLive;
@@ -29,10 +27,6 @@ public class Fields {
 
     public String getAuthor() {
         return author;
-    }
-
-    public String getBody() {
-        return body;
     }
 
     public int getWordCount() {
@@ -51,7 +45,6 @@ public class Fields {
     public String toString() {
         return "{headline: " + headline +
                 " , author: " + author +
-                " , body: " + body +
                 " , wordCount: " + wordCount +
                 " , thumbnail: " + thumbnail +
                 " , isLive: " + isLive + "}";
