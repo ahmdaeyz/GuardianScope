@@ -7,6 +7,7 @@ import java.util.List;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public interface ArticlesRepository {
     Observable<List<Article>> getTrendingArticles();
@@ -24,4 +25,6 @@ public interface ArticlesRepository {
     Observable<List<Article>> search(String keyword);
 
     LocalDateTime getLastTimeUpdated();
+
+    Single<Article> getArticle(String apiUrl);
 }

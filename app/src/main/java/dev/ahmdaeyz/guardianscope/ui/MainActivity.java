@@ -9,10 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import org.parceler.Parcels;
-
 import dev.ahmdaeyz.guardianscope.R;
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.databinding.ActivityMainBinding;
 import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
 import dev.ahmdaeyz.guardianscope.ui.browser.BrowserFragment;
@@ -58,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements NavigateFrom.Read
     }
 
     @Override
-    public void toReader(Article article) {
-        ReaderFragment readerFragment = ReaderFragment.newInstance(Parcels.wrap(article));
+    public void toReader(String apiUrl) {
+        ReaderFragment readerFragment = ReaderFragment.newInstance(apiUrl);
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, readerFragment, "reader_fragment")
                 .addToBackStack("reader_fragment")

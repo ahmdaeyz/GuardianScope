@@ -203,7 +203,7 @@
         <org.sufficientlysecure.htmltextview.HtmlTextView
             android:id="@+id/article_body"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="16dp"
             android:fontFamily="@font/titillium_web_light"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"

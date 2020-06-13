@@ -6,17 +6,17 @@ import org.parceler.ParcelConstructor;
 @Parcel
 public class Article {
     private boolean isLiked;
-
     private String id;
     private String sectionName;
     private String webPublicationDate;
     private String webTitle;
     private String webUrl;
+    private String apiUrl;
     private Fields fields;
     private boolean isBookmarked;
 
     @ParcelConstructor
-    public Article(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, Fields fields) {
+    public Article(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, String apiUrl, Fields fields) {
         this.id = id;
         this.sectionName = sectionName;
         this.webPublicationDate = webPublicationDate;
@@ -25,6 +25,7 @@ public class Article {
         this.fields = fields;
         this.isLiked = false;
         this.isBookmarked = false;
+        this.apiUrl = apiUrl;
     }
 
     public String getId() {
@@ -75,5 +76,9 @@ public class Article {
 
     public void setBookmarked(boolean bookmarked) {
         isBookmarked = bookmarked;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
     }
 }
