@@ -62,7 +62,7 @@ public class TrendingFragment extends Fragment {
         });
 
         adapter.setOnItemClickListener((view, article) -> {
-            navigateFromDiscover.toReader(article);
+            navigateFromDiscover.toReader(article.getApiUrl());
         });
         return binding.getRoot();
     }
