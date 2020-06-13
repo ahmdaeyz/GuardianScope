@@ -9,4 +9,6 @@ public interface NetworkService {
     Single<List<Article>> getHeadlineArticles();
 
     Single<List<Article>> getSectionsArticles(List<String> sections);
+
+    Single<Article> getArticle(String apiUrl);
 }
