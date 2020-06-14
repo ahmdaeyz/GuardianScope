@@ -3,7 +3,7 @@ package dev.ahmdaeyz.guardianscope.data.model.theguardian;
 import androidx.room.Entity;
 
 @Entity(tableName = "bookmarked_articles")
-public class ArticleWithBody extends Article implements Bookmarkable {
+public class ArticleWithBody extends Article {
 
     private String body;
     private boolean isBookmarked;
@@ -27,32 +27,11 @@ public class ArticleWithBody extends Article implements Bookmarkable {
         return body;
     }
 
-    @Override
-    public Article bookmark() {
-        return new BookmarkedArticle(getId(),
-                getSectionName(),
-                getWebPublicationDate(),
-                getWebTitle(),
-                getWebUrl(),
-                getApiUrl(),
-                getHeadline(),
-                getAuthor(),
-                getWordCount(),
-                getThumbnail(),
-                getIsLive(),
-                getBody());
-    }
-
-    @Override
-    public Article unBookmark() {
-        return this;
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
     }
 
     public boolean isBookmarked() {
         return isBookmarked;
-    }
-
-    public void setBookmarked(boolean bookmarked) {
-        isBookmarked = bookmarked;
     }
 }

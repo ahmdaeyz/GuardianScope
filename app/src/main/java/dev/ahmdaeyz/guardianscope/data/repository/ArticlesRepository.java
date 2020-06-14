@@ -6,7 +6,6 @@ import java.util.List;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.BookmarkedArticle;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -18,7 +17,7 @@ public interface ArticlesRepository {
 
     Completable bookMarkArticle(ArticleWithBody article);
 
-    Completable unBookmarkArticle(BookmarkedArticle article);
+    Completable unBookmarkArticle(ArticleWithBody article);
 
     Observable<List<? extends ArticleWithBody>> getBookmarks();
 

@@ -73,7 +73,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     }
 
     @Override
-    public Completable unBookmarkArticle(BookmarkedArticle article) {
+    public Completable unBookmarkArticle(ArticleWithBody article) {
         return bookmarkedArticlesDao.unBookmarkArticle(article).subscribeOn(Schedulers.io());
     }
 

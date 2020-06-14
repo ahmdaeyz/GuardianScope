@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.BookmarkedArticle;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -30,7 +29,7 @@ class ReaderViewModel extends ViewModel {
                         }));
     }
 
-    public void unBookmarkArticle(BookmarkedArticle article) {
+    public void unBookmarkArticle(ArticleWithBody article) {
         disposables.add(
                 repository.unBookmarkArticle(article)
                         .subscribe(() -> {
