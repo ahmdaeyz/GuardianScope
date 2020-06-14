@@ -1,7 +1,5 @@
 package dev.ahmdaeyz.guardianscope.data.repository;
 
-import org.threeten.bp.LocalDateTime;
-
 import java.util.List;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
@@ -22,8 +20,6 @@ public interface ArticlesRepository {
     Observable<List<? extends ArticleWithBody>> getBookmarks();
 
     Observable<List<Article>> search(String keyword);
-
-    LocalDateTime getLastTimeUpdated();
 
     Single<? extends ArticleWithBody> getArticle(String apiUrl);
 }

@@ -6,13 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.threeten.bp.LocalDateTime;
-
 import java.util.List;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -30,9 +27,7 @@ class TrendingViewModel extends ViewModel {
 
     private void getArticles() {
         disposables.add(
-                Observable.just("")
-                        .filter((o) -> LocalDateTime.now().minusMinutes(30).isAfter(repository.getLastTimeUpdated()))
-                        .flatMap((o) -> repository.getTrendingArticles())
+                repository.getTrendingArticles()
                         .cache()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

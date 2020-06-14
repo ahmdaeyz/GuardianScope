@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.threeten.bp.LocalDateTime;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +51,7 @@ class SectionsViewModel extends ViewModel {
     private void getArticles() {
         disposables.add(
                 sections
-                        .filter((theSections) -> !theSections.isEmpty() && LocalDateTime.now().minusMinutes(30).isAfter(repository.getLastTimeUpdated()))
+                        .filter((theSections) -> !theSections.isEmpty())
                         .flatMap(repository::getSectionsArticles)
                         .cache()
                         .subscribeOn(Schedulers.io())

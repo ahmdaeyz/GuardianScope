@@ -8,14 +8,13 @@ import android.net.NetworkCapabilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 
 import dev.ahmdaeyz.guardianscope.util.exceptions.NoConnectivityException;
 import dev.ahmdaeyz.guardianscope.util.exceptions.NoInternetException;
 import okhttp3.Interceptor;
 import okhttp3.Response;
+
+import static dev.ahmdaeyz.guardianscope.util.network.NetworkUtils.isInternetAvailable;
 
 public class ConnectivityInterceptor implements Interceptor {
     private final Context context;
@@ -47,16 +46,5 @@ public class ConnectivityInterceptor implements Interceptor {
                         connection.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
     }
 
-    private boolean isInternetAvailable() {
-        try {
-            int timeoutMs = 1500;
-            Socket sock = new Socket();
-            SocketAddress sockAddress = new InetSocketAddress("8.8.8.8", 53);
-            sock.connect(sockAddress, timeoutMs);
-            sock.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
+
 }

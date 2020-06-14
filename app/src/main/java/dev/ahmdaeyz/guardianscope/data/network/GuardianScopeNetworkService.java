@@ -5,19 +5,18 @@ import java.util.stream.Collectors;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
+import dev.ahmdaeyz.guardianscope.data.network.interceptors.CacheInterceptor;
 import dev.ahmdaeyz.guardianscope.data.network.networkresponse.articleresponse.Content;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.Interceptor;
 
 public class GuardianScopeNetworkService implements NetworkService {
-    private Interceptor connectivityInterceptor;
     private TheGuardianAPIBuilder theGuardianAPIBuilder;
     private TheGuardianAPI networkAPI;
 
-    public GuardianScopeNetworkService(Interceptor connectivityInterceptor) {
-        this.connectivityInterceptor = connectivityInterceptor;
-        this.theGuardianAPIBuilder = new TheGuardianAPIBuilder(this.connectivityInterceptor);
+    public GuardianScopeNetworkService(Interceptor connectivityInterceptor, CacheInterceptor cacheInterceptor) {
+        this.theGuardianAPIBuilder = new TheGuardianAPIBuilder(connectivityInterceptor, cacheInterceptor);
         this.networkAPI = theGuardianAPIBuilder.create(TheGuardianAPI.class);
     }
 
