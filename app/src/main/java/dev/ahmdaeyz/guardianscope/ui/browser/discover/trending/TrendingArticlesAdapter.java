@@ -41,11 +41,11 @@ public class TrendingArticlesAdapter extends ArticlesAdapter<TrendingArticlesAda
         }
 
         public void bind(Article item, OnItemClickListener onItemClickListener) {
-            binding.articleAuthorName.setText("By " + item.getFields().getAuthor().replace("(new)", ""));
-            binding.articleTitle.setText(item.getFields().getHeadline());
+            binding.articleAuthorName.setText("By " + item.getAuthor().replace("(new)", ""));
+            binding.articleTitle.setText(item.getHeadline());
             binding.sectionName.setText(item.getSectionName());
             binding.articlePubDate.setText(formatDate(item.getWebPublicationDate()));
-            bindImageViewWithRoundCorners(binding.articleThumbnail, item.getFields().getThumbnail());
+            bindImageViewWithRoundCorners(binding.articleThumbnail, item.getThumbnail());
             binding.getRoot().setOnClickListener((view) -> {
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(view, item);

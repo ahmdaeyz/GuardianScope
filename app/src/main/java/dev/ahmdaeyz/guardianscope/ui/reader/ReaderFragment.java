@@ -107,11 +107,11 @@ public class ReaderFragment extends Fragment {
             if (bookmarkButton.getTag().equals(R.drawable.ic_bookmark_filled_24)) {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_24);
                 bookmarkButton.setTag(R.drawable.ic_bookmark_24);
-                viewModel.bookmarkArticle(viewModel.article.getValue().unBookmark());
+                viewModel.unBookmarkArticle((BookmarkedArticle) viewModel.article.getValue());
             } else {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_filled_24);
                 bookmarkButton.setTag(R.drawable.ic_bookmark_filled_24);
-                viewModel.bookmarkArticle(viewModel.article.getValue().bookmark());
+                viewModel.bookmarkArticle(viewModel.article.getValue());
             }
         });
 
@@ -139,15 +139,15 @@ public class ReaderFragment extends Fragment {
     }
 
     private void bindArticle(ArticleWithBody article) {
-        binding.articleBody.setHtml(article.getFields().getBody(), new HtmlHttpImageGetter(binding.articleBody));
+        binding.articleBody.setHtml(article.getBody(), new HtmlHttpImageGetter(binding.articleBody));
         binding.articleBody.setRemoveTrailingWhiteSpace(true);
         Glide.with(binding.articleImage)
-                .load(article.getFields().getThumbnail())
+                .load(article.getThumbnail())
                 .into(binding.articleImage);
-        binding.articleTitle.setText(article.getFields().getHeadline() != null ? article.getFields().getHeadline() : article.getWebTitle());
+        binding.articleTitle.setText(article.getHeadline() != null ? article.getHeadline() : article.getWebTitle());
         binding.sectionName.setText(article.getSectionName());
         binding.articlePubDate.setText(formatDate(article.getWebPublicationDate()));
-        if (article instanceof BookmarkedArticle) {
+        if (article.isBookmarked()) {
             binding.bookmarkButton.setImageResource(R.drawable.ic_bookmark_filled_24);
             binding.bookmarkButton.setTag(R.drawable.ic_bookmark_filled_24);
         } else {

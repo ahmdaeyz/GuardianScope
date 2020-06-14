@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.BookmarkedArticle;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -21,9 +21,18 @@ class ReaderViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public void bookmarkArticle(Article article) {
+    public void bookmarkArticle(ArticleWithBody article) {
         disposables.add(
                 repository.bookMarkArticle(article)
+                        .subscribe(() -> {
+                        }, (throwable) -> {
+                            Log.e("BookmarkArticle", throwable.toString());
+                        }));
+    }
+
+    public void unBookmarkArticle(BookmarkedArticle article) {
+        disposables.add(
+                repository.unBookmarkArticle(article)
                         .subscribe(() -> {
                         }, (throwable) -> {
                             Log.e("BookmarkArticle", "Failed");

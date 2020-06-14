@@ -16,13 +16,15 @@ public interface ArticlesRepository {
 
     Observable<List<Article>> getSectionsArticles(List<String> sections);
 
-    Completable bookMarkArticle(Article article);
+    Completable bookMarkArticle(ArticleWithBody article);
 
-    Observable<List<BookmarkedArticle>> getBookmarks();
+    Completable unBookmarkArticle(BookmarkedArticle article);
+
+    Observable<List<? extends ArticleWithBody>> getBookmarks();
 
     Observable<List<Article>> search(String keyword);
 
     LocalDateTime getLastTimeUpdated();
 
-    Single<ArticleWithBody> getArticle(String apiUrl);
+    Single<? extends ArticleWithBody> getArticle(String apiUrl);
 }

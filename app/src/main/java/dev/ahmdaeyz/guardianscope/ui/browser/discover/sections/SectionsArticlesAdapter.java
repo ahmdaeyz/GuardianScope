@@ -41,10 +41,10 @@ public class SectionsArticlesAdapter extends ArticlesAdapter<SectionsArticlesAda
         }
 
         public void bind(Article item, OnItemClickListener onItemClickListener) {
-            binding.articleAuthorName.setText(item.getFields().getAuthor());
+            binding.articleAuthorName.setText(item.getAuthor());
             binding.articleTitle.setText(item.getWebTitle());
             binding.articlePubDate.setText(formatDate(item.getWebPublicationDate()));
-            bindImageViewWithRoundCorners(binding.articleThumbnail, item.getFields().getThumbnail());
+            bindImageViewWithRoundCorners(binding.articleThumbnail, item.getThumbnail());
             binding.getRoot().setOnClickListener((view) -> {
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(view, item);

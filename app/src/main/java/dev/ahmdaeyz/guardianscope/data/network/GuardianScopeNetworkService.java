@@ -5,8 +5,6 @@ import java.util.stream.Collectors;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.Fields;
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.FieldsWithBody;
 import dev.ahmdaeyz.guardianscope.data.network.networkresponse.articleresponse.Content;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -35,11 +33,11 @@ public class GuardianScopeNetworkService implements NetworkService {
                                 resultsItem.getWebTitle(),
                                 resultsItem.getWebUrl(),
                                 resultsItem.getApiUrl(),
-                                new Fields(resultsItem.getFields().getHeadline(),
-                                        resultsItem.getFields().getByline(),
-                                        resultsItem.getFields().getWordcount(),
-                                        resultsItem.getFields().getThumbnail(),
-                                        true)
+                                resultsItem.getFields().getHeadline(),
+                                resultsItem.getFields().getByline(),
+                                resultsItem.getFields().getWordcount(),
+                                resultsItem.getFields().getThumbnail(),
+                                true
                         ))).toList());
 
     }
@@ -58,11 +56,11 @@ public class GuardianScopeNetworkService implements NetworkService {
                                 resultsItem.getWebTitle(),
                                 resultsItem.getWebUrl(),
                                 resultsItem.getApiUrl(),
-                                new Fields(resultsItem.getFields().getHeadline(),
-                                        resultsItem.getFields().getByline(),
-                                        resultsItem.getFields().getWordcount(),
-                                        resultsItem.getFields().getThumbnail(),
-                                        true)
+                                resultsItem.getFields().getHeadline(),
+                                resultsItem.getFields().getByline(),
+                                resultsItem.getFields().getWordcount(),
+                                resultsItem.getFields().getThumbnail(),
+                                true
                         ))).toList());
     }
 
@@ -80,14 +78,12 @@ public class GuardianScopeNetworkService implements NetworkService {
                     articleContent.getWebTitle(),
                     articleContent.getWebUrl(),
                     articleContent.getApiUrl(),
-                    new FieldsWithBody(
-                            articleContent.getFields().getHeadline(),
-                            articleContent.getFields().getByline(),
-                            articleContent.getFields().getWordcount(),
-                            articleContent.getFields().getThumbnail(),
-                            articleContent.getFields().getIsLive(),
-                            articleContent.getFields().getBody()
-                    )
+                    articleContent.getFields().getHeadline(),
+                    articleContent.getFields().getByline(),
+                    articleContent.getFields().getWordcount(),
+                    articleContent.getFields().getThumbnail(),
+                    articleContent.getFields().getIsLive(),
+                    articleContent.getFields().getBody()
             ));
         });
 

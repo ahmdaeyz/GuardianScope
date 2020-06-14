@@ -1,5 +1,8 @@
 package dev.ahmdaeyz.guardianscope.data.model.theguardian;
 
+import androidx.annotation.NonNull;
+import androidx.room.PrimaryKey;
+
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
@@ -10,18 +13,28 @@ public class Article {
     private String webPublicationDate;
     private String webTitle;
     private String webUrl;
+    @PrimaryKey
+    @NonNull
     private String apiUrl;
-    private Fields fields;
+    private String headline;
+    private String author;
+    private int wordCount;
+    private String thumbnail;
+    private Boolean isLive;
 
     @ParcelConstructor
-    public Article(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, String apiUrl, Fields fields) {
+    public Article(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, String apiUrl, String headline, String author, Integer wordCount, String thumbnail, Boolean isLive) {
         this.id = id;
         this.sectionName = sectionName;
         this.webPublicationDate = webPublicationDate;
         this.webTitle = webTitle;
         this.webUrl = webUrl;
-        this.fields = fields;
         this.apiUrl = apiUrl;
+        this.headline = headline;
+        this.author = author;
+        this.wordCount = wordCount;
+        this.thumbnail = thumbnail;
+        this.isLive = isLive;
     }
 
     public String getId() {
@@ -44,23 +57,28 @@ public class Article {
         return webUrl;
     }
 
-    public Fields getFields() {
-        return fields;
-    }
-
     public String getApiUrl() {
         return apiUrl;
     }
 
-    @Override
-    public String toString() {
-        return "{id: " + id +
-                " , sectionName: " + sectionName +
-                " , webPublicationDate: " + webPublicationDate +
-                " , webTitle: " + webTitle +
-                " , webUrl: " + webUrl +
-                " , Fields: " + fields.toString() + "}";
+    public String getHeadline() {
+        return headline;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public int getWordCount() {
+        return wordCount;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public Boolean getIsLive() {
+        return isLive;
+    }
 
 }
