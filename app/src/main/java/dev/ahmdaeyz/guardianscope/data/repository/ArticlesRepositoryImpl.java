@@ -7,7 +7,10 @@ import org.threeten.bp.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import dev.ahmdaeyz.guardianscope.data.db.daos.BookmarkedArticlesDao;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.BookmarkedArticle;
 import dev.ahmdaeyz.guardianscope.data.network.NetworkService;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -17,19 +20,21 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ArticlesRepositoryImpl implements ArticlesRepository {
     private final NetworkService networkService;
+    private final BookmarkedArticlesDao bookmarkedArticlesDao;
     private static ArticlesRepositoryImpl INSTANCE;
     private LocalDateTime lastTimeUpdated;
 
-    private ArticlesRepositoryImpl(NetworkService networkService) {
+    private ArticlesRepositoryImpl(NetworkService networkService, BookmarkedArticlesDao bookmarkedArticlesDao) {
         this.networkService = networkService;
+        this.bookmarkedArticlesDao = bookmarkedArticlesDao;
         this.lastTimeUpdated = LocalDateTime.of(1999, 4, 3, 4, 5);
     }
 
-    public static ArticlesRepositoryImpl initRepository(NetworkService networkService) {
+    public static ArticlesRepositoryImpl initRepository(NetworkService networkService, BookmarkedArticlesDao bookmarkedArticlesDao) {
         if (INSTANCE != null) {
             throw new RuntimeException("you can't reinitialize ArticlesRepository, Already is.");
         } else {
-            INSTANCE = new ArticlesRepositoryImpl(networkService);
+            INSTANCE = new ArticlesRepositoryImpl(networkService, bookmarkedArticlesDao);
             return INSTANCE;
         }
     }
@@ -63,23 +68,22 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     }
 
     @Override
-    public Completable bookMarkArticle(Article article) {
-        return Completable.complete();
+    public Completable bookMarkArticle(ArticleWithBody article) {
+        return bookmarkedArticlesDao.bookmarkArticle(article).subscribeOn(Schedulers.io());
     }
 
     @Override
-    public Observable<List<Article>> getBookmarks() {
-        return null;
+    public Completable unBookmarkArticle(ArticleWithBody article) {
+        return bookmarkedArticlesDao.unBookmarkArticle(article).subscribeOn(Schedulers.io());
     }
 
     @Override
-    public Completable favouriteArticle(Article article) {
-        return Completable.complete();
-    }
-
-    @Override
-    public Observable<List<Article>> getFavourites() {
-        return null;
+    public Observable<List<? extends ArticleWithBody>> getBookmarks() {
+        return bookmarkedArticlesDao.getBookmarked()
+                .flatMap((articleWithBodies -> Observable.fromIterable(articleWithBodies)
+                        .cast(BookmarkedArticle.class)
+                        .toList()
+                        .toObservable().subscribeOn(Schedulers.io())));
     }
 
     @Override
@@ -93,8 +97,13 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     }
 
     @Override
-    public Single<Article> getArticle(String apiUrl) {
-        return networkService.getArticle(apiUrl)
+    public Single<ArticleWithBody> getArticle(String apiUrl) {
+        return bookmarkedArticlesDao.getBookmarkedArticle(apiUrl)
+                .map((article -> {
+                    article.setBookmarked(true);
+                    return article;
+                }))
+                .onErrorResumeNext(networkService.getArticle(apiUrl))
                 .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

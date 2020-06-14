@@ -5,6 +5,7 @@ import org.threeten.bp.LocalDateTime;
 import java.util.List;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -14,17 +15,15 @@ public interface ArticlesRepository {
 
     Observable<List<Article>> getSectionsArticles(List<String> sections);
 
-    Completable bookMarkArticle(Article article);
+    Completable bookMarkArticle(ArticleWithBody article);
 
-    Observable<List<Article>> getBookmarks();
+    Completable unBookmarkArticle(ArticleWithBody article);
 
-    Completable favouriteArticle(Article article);
-
-    Observable<List<Article>> getFavourites();
+    Observable<List<? extends ArticleWithBody>> getBookmarks();
 
     Observable<List<Article>> search(String keyword);
 
     LocalDateTime getLastTimeUpdated();
 
-    Single<Article> getArticle(String apiUrl);
+    Single<? extends ArticleWithBody> getArticle(String apiUrl);
 }

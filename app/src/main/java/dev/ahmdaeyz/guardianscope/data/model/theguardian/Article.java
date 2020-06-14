@@ -1,31 +1,40 @@
 package dev.ahmdaeyz.guardianscope.data.model.theguardian;
 
+import androidx.annotation.NonNull;
+import androidx.room.PrimaryKey;
+
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
 @Parcel
 public class Article {
-    private boolean isLiked;
     private String id;
     private String sectionName;
     private String webPublicationDate;
     private String webTitle;
     private String webUrl;
+    @PrimaryKey
+    @NonNull
     private String apiUrl;
-    private Fields fields;
-    private boolean isBookmarked;
+    private String headline;
+    private String author;
+    private int wordCount;
+    private String thumbnail;
+    private Boolean isLive;
 
     @ParcelConstructor
-    public Article(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, String apiUrl, Fields fields) {
+    public Article(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, String apiUrl, String headline, String author, Integer wordCount, String thumbnail, Boolean isLive) {
         this.id = id;
         this.sectionName = sectionName;
         this.webPublicationDate = webPublicationDate;
         this.webTitle = webTitle;
         this.webUrl = webUrl;
-        this.fields = fields;
-        this.isLiked = false;
-        this.isBookmarked = false;
         this.apiUrl = apiUrl;
+        this.headline = headline;
+        this.author = author;
+        this.wordCount = wordCount;
+        this.thumbnail = thumbnail;
+        this.isLive = isLive;
     }
 
     public String getId() {
@@ -48,37 +57,28 @@ public class Article {
         return webUrl;
     }
 
-    public Fields getFields() {
-        return fields;
-    }
-
-    @Override
-    public String toString() {
-        return "{id: " + id +
-                " , sectionName: " + sectionName +
-                " , webPublicationDate: " + webPublicationDate +
-                " , webTitle: " + webTitle +
-                " , webUrl: " + webUrl +
-                " , Fields: " + fields.toString() + "}";
-    }
-
-    public boolean isLiked() {
-        return isLiked;
-    }
-
-    public void setLiked(boolean liked) {
-        isLiked = liked;
-    }
-
-    public boolean isBookmarked() {
-        return isBookmarked;
-    }
-
-    public void setBookmarked(boolean bookmarked) {
-        isBookmarked = bookmarked;
-    }
-
     public String getApiUrl() {
         return apiUrl;
     }
+
+    public String getHeadline() {
+        return headline;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public int getWordCount() {
+        return wordCount;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public Boolean getIsLive() {
+        return isLive;
+    }
+
 }

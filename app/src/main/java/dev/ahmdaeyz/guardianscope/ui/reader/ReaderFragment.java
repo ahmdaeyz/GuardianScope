@@ -19,7 +19,8 @@ import com.google.android.material.snackbar.Snackbar;
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 
 import dev.ahmdaeyz.guardianscope.R;
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
+import dev.ahmdaeyz.guardianscope.data.model.theguardian.BookmarkedArticle;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentReaderBinding;
@@ -101,27 +102,16 @@ public class ReaderFragment extends Fragment {
             startActivity(shareIntent);
         });
 
-        binding.favouriteButton.setOnClickListener((view) -> {
-            viewModel.favouriteArticle();
-            ImageButton likeButton = (ImageButton) view;
-            if (likeButton.getTag().equals(R.drawable.ic_heart_filled_24)) {
-                likeButton.setImageResource(R.drawable.ic_heart_24);
-                likeButton.setTag(R.drawable.ic_heart_24);
-            } else {
-                likeButton.setImageResource(R.drawable.ic_heart_filled_24);
-                likeButton.setTag(R.drawable.ic_heart_filled_24);
-            }
-        });
-
         binding.bookmarkButton.setOnClickListener((view) -> {
-            viewModel.bookmarkArticle();
             ImageButton bookmarkButton = (ImageButton) view;
             if (bookmarkButton.getTag().equals(R.drawable.ic_bookmark_filled_24)) {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_24);
                 bookmarkButton.setTag(R.drawable.ic_bookmark_24);
+                viewModel.unBookmarkArticle((BookmarkedArticle) viewModel.article.getValue());
             } else {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_filled_24);
                 bookmarkButton.setTag(R.drawable.ic_bookmark_filled_24);
+                viewModel.bookmarkArticle(viewModel.article.getValue());
             }
         });
 
@@ -148,21 +138,15 @@ public class ReaderFragment extends Fragment {
         return "Read this interesting article at " + webTitle;
     }
 
-    private void bindArticle(Article article) {
-        binding.articleBody.setHtml(article.getFields().getBody(), new HtmlHttpImageGetter(binding.articleBody));
+    private void bindArticle(ArticleWithBody article) {
+        binding.articleBody.setHtml(article.getBody(), new HtmlHttpImageGetter(binding.articleBody));
         binding.articleBody.setRemoveTrailingWhiteSpace(true);
         Glide.with(binding.articleImage)
-                .load(article.getFields().getThumbnail())
+                .load(article.getThumbnail())
                 .into(binding.articleImage);
-        binding.articleTitle.setText(article.getFields().getHeadline() != null ? article.getFields().getHeadline() : article.getWebTitle());
+        binding.articleTitle.setText(article.getHeadline() != null ? article.getHeadline() : article.getWebTitle());
         binding.sectionName.setText(article.getSectionName());
         binding.articlePubDate.setText(formatDate(article.getWebPublicationDate()));
-        if (article.isLiked()) {
-            binding.favouriteButton.setImageResource(R.drawable.ic_heart_filled_24);
-            binding.favouriteButton.setTag(R.drawable.ic_heart_filled_24);
-        } else {
-            binding.favouriteButton.setTag(R.drawable.ic_heart_24);
-        }
         if (article.isBookmarked()) {
             binding.bookmarkButton.setImageResource(R.drawable.ic_bookmark_filled_24);
             binding.bookmarkButton.setTag(R.drawable.ic_bookmark_filled_24);
@@ -173,7 +157,6 @@ public class ReaderFragment extends Fragment {
 
     private void disableButtons() {
         binding.bookmarkButton.setEnabled(false);
-        binding.favouriteButton.setEnabled(false);
         binding.shareToTwitterButton.setEnabled(false);
         binding.shareButton.setEnabled(false);
     }
