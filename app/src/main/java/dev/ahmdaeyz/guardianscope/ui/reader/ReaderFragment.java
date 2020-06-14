@@ -20,7 +20,6 @@ import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 
 import dev.ahmdaeyz.guardianscope.R;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.BookmarkedArticle;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentReaderBinding;
@@ -107,7 +106,7 @@ public class ReaderFragment extends Fragment {
             if (bookmarkButton.getTag().equals(R.drawable.ic_bookmark_filled_24)) {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_24);
                 bookmarkButton.setTag(R.drawable.ic_bookmark_24);
-                viewModel.unBookmarkArticle((BookmarkedArticle) viewModel.article.getValue());
+                viewModel.unBookmarkArticle(viewModel.article.getValue());
             } else {
                 bookmarkButton.setImageResource(R.drawable.ic_bookmark_filled_24);
                 bookmarkButton.setTag(R.drawable.ic_bookmark_filled_24);
