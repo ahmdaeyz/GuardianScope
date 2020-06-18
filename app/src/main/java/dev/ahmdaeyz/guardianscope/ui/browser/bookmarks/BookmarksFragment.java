@@ -13,17 +13,23 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import java.util.concurrent.TimeUnit;
+
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentBookmarksBinding;
 import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import tyrantgit.explosionfield.ExplosionField;
 
 public class BookmarksFragment extends Fragment {
     private FragmentBookmarksBinding binding;
     private NavigateFrom.Browsers navigateFromBookmarks;
     private BookmarksViewModel viewModel;
-
+    private CompositeDisposable disposables = new CompositeDisposable();
     public BookmarksFragment() {
         // Required empty public constructor
     }
@@ -76,6 +82,29 @@ public class BookmarksFragment extends Fragment {
             viewModel.unBookmarkArticle(article);
             adapter.removeItem(article);
         }));
+
+        disposables.add(
+                RxTextView.textChanges(binding.searchLayout.searchKeywordsEditText)
+                        .skipInitialValue()
+                        .debounce(300, TimeUnit.MILLISECONDS)
+                        .flatMap(charSequence -> viewModel.search(charSequence.toString()))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                (searchResults) -> {
+                                    adapter.clear();
+                                    adapter.addAll(searchResults);
+                                },
+                                (throwable) -> {
+                                    Log.e("BookmarksFragment", throwable.toString());
+                                }
+                        )
+        );
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        disposables.clear();
+        super.onDestroyView();
     }
 }

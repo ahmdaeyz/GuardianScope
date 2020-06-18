@@ -7,17 +7,14 @@
     android:background="@color/colorPrimary"
     tools:context=".ui.browser.bookmarks.BookmarksFragment">
 
-    <fragment
-        android:id="@+id/search_fragment"
-        android:name="dev.ahmdaeyz.guardianscope.ui.browser.bookmarks.search.SearchFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <include
+        android:id="@+id/search_layout"
+        layout="@layout/search_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0"
-        tools:layout="@layout/fragment_search" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bookmarked_articles_list"
@@ -26,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_fragment"
+        app:layout_constraintTop_toBottomOf="@id/search_layout"
         tools:listitem="@layout/bookmarked_article_layout" />
 
     <TextView
@@ -41,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_fragment" />
+        app:layout_constraintTop_toBottomOf="@id/search_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

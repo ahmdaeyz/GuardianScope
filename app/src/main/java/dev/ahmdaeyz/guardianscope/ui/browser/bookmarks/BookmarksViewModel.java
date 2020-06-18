@@ -10,6 +10,7 @@ import java.util.List;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 class BookmarksViewModel extends ViewModel {
@@ -50,5 +51,9 @@ class BookmarksViewModel extends ViewModel {
                                 }
                         )
         );
+    }
+
+    public Observable<List<ArticleWithBody>> search(String keyword) {
+        return repository.search(keyword);
     }
 }

@@ -78,8 +78,9 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     }
 
     @Override
-    public Observable<List<Article>> search(String keyword) {
-        return null;
+    public Observable<List<ArticleWithBody>> search(String keyword) {
+        return bookmarkedArticlesDao.search("%" + keyword + "%")
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
