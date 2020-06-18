@@ -30,7 +30,7 @@ public class SectionsFragment extends Fragment {
     private SectionsArticlesAdapter adapter;
     private SectionsViewModel viewModel;
     private CompositeDisposable disposable = new CompositeDisposable();
-    private NavigateFrom.Browsers.Discover navigateFromDiscover;
+    private NavigateFrom.Browsers navigateFromDiscover;
 
     public SectionsFragment() {
         // Required empty public constructor
@@ -41,7 +41,7 @@ public class SectionsFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            navigateFromDiscover = (NavigateFrom.Browsers.Discover) context;
+            navigateFromDiscover = (NavigateFrom.Browsers) context;
         } catch (ClassCastException e) {
             Log.e("SectionsFragment", "Parent Activity must implement NavigateFrom.Browsers.Discover");
         }

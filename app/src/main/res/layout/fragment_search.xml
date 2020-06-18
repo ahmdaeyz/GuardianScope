@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.search.SearchFragment"
+    tools:context=".ui.browser.bookmarks.search.SearchFragment"
     android:padding="16dp"
     android:clipToPadding="false"
     >
@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:hint="Search"
+            android:hint="@string/search"
             android:textColorHint="@color/colorGrey"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"

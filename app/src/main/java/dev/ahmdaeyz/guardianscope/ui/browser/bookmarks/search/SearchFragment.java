@@ -1,12 +1,11 @@
-package dev.ahmdaeyz.guardianscope.ui.search;
+package dev.ahmdaeyz.guardianscope.ui.browser.bookmarks.search;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import dev.ahmdaeyz.guardianscope.databinding.FragmentSearchBinding;
 

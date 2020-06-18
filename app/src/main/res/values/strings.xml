@@ -31,4 +31,7 @@
     <string name="favourite_success">Article favourited Successfully!</string>
     <string name="favourite_failure">Article wasn\'t favourited</string>
     <string name="unfavourite_success">Article was unfavoured successfully.</string>
+    <string name="search">Search</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="start_bookmarking_articles_n_to_appeare_here">Start bookmarking articles\n to appeare here!</string>
 </resources>

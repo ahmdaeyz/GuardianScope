@@ -15,7 +15,7 @@ import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
 import dev.ahmdaeyz.guardianscope.ui.browser.BrowserFragment;
 import dev.ahmdaeyz.guardianscope.ui.reader.ReaderFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigateFrom.Reader, NavigateFrom.Browsers.Discover {
+public class MainActivity extends AppCompatActivity implements NavigateFrom.Reader, NavigateFrom.Browsers {
     private ActivityMainBinding binding;
     FragmentManager fragmentManager;
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigateFrom.Read
 
     @Override
     public void onBackPressedFromFragment() {
-        fragmentManager.popBackStack("reader_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override

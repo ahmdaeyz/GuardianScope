@@ -52,6 +52,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.19'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
+    implementation 'com.mikhaellopez:rxanimation:1.0.0'
+
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
@@ -72,9 +74,9 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:2.2.5"
     implementation "androidx.room:room-rxjava2:2.2.5"
 
-
-
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+
+    implementation 'tyrantgit:explosionfield:1.0.1'
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.databinding.TrendingArticleLayoutBinding;
-import dev.ahmdaeyz.guardianscope.ui.browser.discover.common.ArticlesAdapter;
+import dev.ahmdaeyz.guardianscope.ui.browser.common.ArticlesAdapter;
 
-import static dev.ahmdaeyz.guardianscope.ui.browser.discover.common.Binding.bindImageViewWithRoundCorners;
-import static dev.ahmdaeyz.guardianscope.ui.browser.discover.common.Binding.formatDate;
+import static dev.ahmdaeyz.guardianscope.ui.browser.common.Binding.bindImageViewWithRoundCorners;
+import static dev.ahmdaeyz.guardianscope.ui.browser.common.Binding.formatDate;
 
 public class TrendingArticlesAdapter extends ArticlesAdapter<TrendingArticlesAdapter.ViewHolder> {
     @NonNull

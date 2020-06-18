@@ -25,7 +25,7 @@ import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentReaderBinding;
 import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
 
-import static dev.ahmdaeyz.guardianscope.ui.browser.discover.common.Binding.formatDate;
+import static dev.ahmdaeyz.guardianscope.ui.browser.common.Binding.formatDate;
 
 
 public class ReaderFragment extends Fragment {
