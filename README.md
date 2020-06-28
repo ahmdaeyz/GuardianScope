@@ -4,5 +4,5 @@
 <img src="https://github.com/ahmdaeyz/GuardianScope/blob/master/guardianScope_demo.gif"/>
 
 ### Currently 
-<img src="https://github.com/ahmdaeyz/GuardianScope/blob/master/guardianScope_reader_demo.gif"/>
+<img src="https://github.com/ahmdaeyz/GuardianScope/blob/master/guardianScope_latest_demo.gif"/>
 
