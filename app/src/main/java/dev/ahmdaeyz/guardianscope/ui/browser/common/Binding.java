@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.ui.browser.discover.common;
+package dev.ahmdaeyz.guardianscope.ui.browser.common;
 
 import android.widget.ImageView;
 

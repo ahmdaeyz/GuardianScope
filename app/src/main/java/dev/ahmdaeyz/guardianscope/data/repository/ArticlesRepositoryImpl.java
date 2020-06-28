@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import dev.ahmdaeyz.guardianscope.data.db.daos.BookmarkedArticlesDao;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
-import dev.ahmdaeyz.guardianscope.data.model.theguardian.BookmarkedArticle;
 import dev.ahmdaeyz.guardianscope.data.network.NetworkService;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -74,14 +73,14 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
     public Observable<List<? extends ArticleWithBody>> getBookmarks() {
         return bookmarkedArticlesDao.getBookmarked()
                 .flatMap((articleWithBodies -> Observable.fromIterable(articleWithBodies)
-                        .cast(BookmarkedArticle.class)
                         .toList()
                         .toObservable().subscribeOn(Schedulers.io())));
     }
 
     @Override
-    public Observable<List<Article>> search(String keyword) {
-        return null;
+    public Observable<List<ArticleWithBody>> search(String keyword) {
+        return bookmarkedArticlesDao.search("%" + keyword + "%")
+                .subscribeOn(Schedulers.io());
     }
 
     @Override

@@ -19,7 +19,7 @@ public interface ArticlesRepository {
 
     Observable<List<? extends ArticleWithBody>> getBookmarks();
 
-    Observable<List<Article>> search(String keyword);
+    Observable<List<ArticleWithBody>> search(String keyword);
 
     Single<? extends ArticleWithBody> getArticle(String apiUrl);
 }

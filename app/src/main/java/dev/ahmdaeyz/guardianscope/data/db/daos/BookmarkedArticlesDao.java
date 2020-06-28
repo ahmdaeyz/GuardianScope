@@ -27,5 +27,7 @@ public interface BookmarkedArticlesDao {
     @Query("SELECT * FROM bookmarked_articles")
     Observable<List<ArticleWithBody>> getBookmarked();
 
+    @Query("SELECT * FROM bookmarked_articles WHERE webTitle LIKE :keyword")
+    Observable<List<ArticleWithBody>> search(String keyword);
 
 }

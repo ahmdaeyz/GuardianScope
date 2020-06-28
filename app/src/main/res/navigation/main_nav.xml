@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/browserFragment">
+
+    <fragment
+        android:id="@+id/browserFragment"
+        android:name="dev.ahmdaeyz.guardianscope.ui.browser.BrowserFragment"
+        android:label="fragment_browser"
+        tools:layout="@layout/fragment_browser">
+        <action
+            android:id="@+id/action_browserFragment_to_readerFragment"
+            app:destination="@id/readerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/readerFragment"
+        android:name="dev.ahmdaeyz.guardianscope.ui.reader.ReaderFragment"
+        android:label="ReaderFragment">
+        <argument
+            android:name="apiUrl"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_readerFragment_to_browserFragment"
+            app:destination="@id/browserFragment" />
+    </fragment>
+</navigation>

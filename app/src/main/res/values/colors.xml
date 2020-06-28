@@ -6,4 +6,5 @@
     <color name="colorDot">#e84a5f</color>
     <color name="colorGrey">#dddddd</color>
     <color name="colorDarkerGrey">#979797</color>
+    <color name="colorBlack">@android:color/black</color>
 </resources>

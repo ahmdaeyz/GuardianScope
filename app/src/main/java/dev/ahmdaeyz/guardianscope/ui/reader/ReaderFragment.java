@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,7 +26,7 @@ import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentReaderBinding;
 import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
 
-import static dev.ahmdaeyz.guardianscope.ui.browser.discover.common.Binding.formatDate;
+import static dev.ahmdaeyz.guardianscope.ui.browser.common.Binding.formatDate;
 
 
 public class ReaderFragment extends Fragment {
@@ -86,7 +87,8 @@ public class ReaderFragment extends Fragment {
             }
         });
         binding.goBackButton.setOnClickListener((view) -> {
-            navigateFromReader.onBackPressedFromFragment();
+//            Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigateUp();
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).popBackStack();
         });
 
         binding.shareToTwitterButton.setOnClickListener((view) -> {
@@ -159,4 +161,5 @@ public class ReaderFragment extends Fragment {
         binding.shareToTwitterButton.setEnabled(false);
         binding.shareButton.setEnabled(false);
     }
+
 }
