@@ -1,13 +1,11 @@
 package dev.ahmdaeyz.guardianscope.ui.browser.discover.trending;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,25 +13,22 @@ import dev.ahmdaeyz.guardianscope.R;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentTrendingBinding;
-import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
+import dev.ahmdaeyz.guardianscope.ui.browser.discover.DelegateToBrowser;
 
 public class TrendingFragment extends Fragment {
-    private FragmentTrendingBinding binding;
-    private TrendingArticlesAdapter adapter;
+    private static final String TAG = "TrendingFragment";
     private TrendingViewModel viewModel;
-    private NavigateFrom.Browsers navigateFromDiscover;
+    private DelegateToBrowser delegateToBrowser;
 
     public TrendingFragment() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void attachingToParentFragment(Fragment fragment) {
         try {
-            navigateFromDiscover = (NavigateFrom.Browsers) context;
+            delegateToBrowser = (DelegateToBrowser) fragment;
         } catch (ClassCastException e) {
-            Log.e("SectionsFragment", "Parent Activity must implement NavigateFrom.Browsers.Discover");
+            Log.e(TAG, "attachingToParentFragment: ", e);
         }
     }
 
@@ -43,13 +38,14 @@ public class TrendingFragment extends Fragment {
         ArticlesRepository articlesRepository = ArticlesRepositoryImpl.getInstance();
         TrendingViewModelFactory factory = new TrendingViewModelFactory(articlesRepository);
         viewModel = new ViewModelProvider(this, factory).get(TrendingViewModel.class);
+        attachingToParentFragment(getParentFragment());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentTrendingBinding.inflate(inflater, container, false);
-        adapter = new TrendingArticlesAdapter();
+        FragmentTrendingBinding binding = FragmentTrendingBinding.inflate(inflater, container, false);
+        TrendingArticlesAdapter adapter = new TrendingArticlesAdapter();
         binding.trendingList.setAdapter(adapter);
         viewModel.articles.observe(getViewLifecycleOwner(), articles -> {
             binding.spinKit.setVisibility(View.GONE);
@@ -62,7 +58,7 @@ public class TrendingFragment extends Fragment {
         });
 
         adapter.setOnItemClickListener((view, article) -> {
-            navigateFromDiscover.toReader(article.getApiUrl());
+            delegateToBrowser.delegate(article.getApiUrl());
         });
         return binding.getRoot();
     }

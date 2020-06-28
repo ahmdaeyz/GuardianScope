@@ -1,13 +1,11 @@
 package dev.ahmdaeyz.guardianscope.ui.browser.bookmarks;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +24,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import tyrantgit.explosionfield.ExplosionField;
 
 public class BookmarksFragment extends Fragment {
-    private FragmentBookmarksBinding binding;
+    private static final String TAG = "BookmarksFragment";
     private NavigateFrom.Browsers navigateFromBookmarks;
     private BookmarksViewModel viewModel;
     private CompositeDisposable disposables = new CompositeDisposable();
@@ -34,13 +32,11 @@ public class BookmarksFragment extends Fragment {
         // Required empty public constructor
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void attachingToParentFragment(Fragment fragment) {
         try {
-            navigateFromBookmarks = (NavigateFrom.Browsers) context;
+            navigateFromBookmarks = (NavigateFrom.Browsers) fragment;
         } catch (ClassCastException e) {
-            Log.e("BookmarksFragment", "Activity have to implement NavigateFrom.Browsers.");
+            Log.e(TAG, "attachingToParentFragment: ", e);
         }
     }
 
@@ -50,12 +46,13 @@ public class BookmarksFragment extends Fragment {
         ArticlesRepository repository = ArticlesRepositoryImpl.getInstance();
         BookmarksViewModelFactory factory = new BookmarksViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(BookmarksViewModel.class);
+        attachingToParentFragment(getParentFragment().getParentFragment());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentBookmarksBinding.inflate(inflater, container, false);
+        FragmentBookmarksBinding binding = FragmentBookmarksBinding.inflate(inflater, container, false);
         ExplosionField explosionField = ExplosionField.attach2Window(this.getActivity());
         BookmarksAdapter adapter = new BookmarksAdapter();
 
@@ -70,7 +67,7 @@ public class BookmarksFragment extends Fragment {
 
         });
         adapter.setOnItemClickListener((view, article) -> {
-            navigateFromBookmarks.toReader(article.getApiUrl());
+            navigateFromBookmarks.toReaderFromBookmarks(article.getApiUrl());
         });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);

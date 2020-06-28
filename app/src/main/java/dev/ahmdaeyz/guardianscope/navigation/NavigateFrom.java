@@ -6,6 +6,8 @@ public interface NavigateFrom {
     }
 
     interface Browsers {
-        void toReader(String apiUrl);
+        void toReaderFromDiscover(String apiUrl);
+
+        void toReaderFromBookmarks(String apiUrl);
     }
 }

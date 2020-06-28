@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        android:id="@+id/moving_dot_bouncing"
+        motion:constraintSetEnd="@+id/in_bookmarks"
+        motion:constraintSetStart="@+id/in_discover"
+        motion:duration="300">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="65"
+                motion:motionTarget="@id/moving_dot" />
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/in_discover">
+        <Constraint
+            android:id="@id/moving_dot"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toStartOf="@id/discover_button"
+            motion:layout_constraintHorizontal_bias="1"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/in_bookmarks">
+        <Constraint
+            android:id="@id/moving_dot"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toStartOf="@id/bookmarks_button"
+            motion:layout_constraintHorizontal_bias="1"
+            motion:layout_constraintStart_toStartOf="@id/discover_button"
+            motion:layout_constraintTop_toTopOf="parent">
+            <!--            <Transform-->
+            <!--                android:translationZ="20dp"-->
+            <!--                />-->
+        </Constraint>
+    </ConstraintSet>
+</MotionScene>

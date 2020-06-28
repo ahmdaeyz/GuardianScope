@@ -1,10 +1,10 @@
 package dev.ahmdaeyz.guardianscope.ui.browser;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,34 +12,41 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
-import com.mikhaellopez.rxanimation.RxAnimation;
-import com.mikhaellopez.rxanimation.RxAnimationExtensionKt;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import dev.ahmdaeyz.guardianscope.R;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentBrowserBinding;
-import dev.ahmdaeyz.guardianscope.ui.NoConnectionFragment;
-import dev.ahmdaeyz.guardianscope.ui.browser.bookmarks.BookmarksFragment;
-import dev.ahmdaeyz.guardianscope.ui.browser.discover.DiscoverFragment;
-import io.reactivex.Completable;
+import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
+import dev.ahmdaeyz.guardianscope.ui.NoConnectionFragmentDirections;
+import dev.ahmdaeyz.guardianscope.ui.browser.bookmarks.BookmarksFragmentDirections;
+import dev.ahmdaeyz.guardianscope.ui.browser.discover.DiscoverFragmentDirections;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
 
-public class BrowserFragment extends Fragment {
-    public static final String BOOKMARKS_TAG = "bookmarks_fragment";
-    public static final String DISCOVER_TAG = "discover_fragment";
-    Fragment currentFragment;
-    NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
+import static android.net.ConnectivityManager.NetworkCallback;
+import static dev.ahmdaeyz.guardianscope.ui.browser.common.FragmentsLabels.BOOKMARKS_FRAGMENT;
+import static dev.ahmdaeyz.guardianscope.ui.browser.common.FragmentsLabels.DISCOVER_FRAGMENT;
+import static dev.ahmdaeyz.guardianscope.ui.browser.common.FragmentsLabels.NO_CONNECTION_FRAGMENT;
+
+public class BrowserFragment extends Fragment implements NavigateFrom.Browsers {
     private FragmentBrowserBinding binding;
-    private FragmentManager fragmentManager;
     private BehaviorSubject<Boolean> isNetworkConnected = BehaviorSubject.createDefault(false);
-    private CompositeDisposable disposables = new CompositeDisposable();
-    Completable fromDiscoverToBookmarksAnimation;
-    Completable fromBookmarksToDiscoverAnimation;
-    private String fragmentBeforeInternetLost = DISCOVER_TAG;
+    boolean isConnected = false;
+    NavController navController;
+    BehaviorSubject<List<String>> currentDestination = BehaviorSubject.createDefault(new ArrayList<>());
+    NavController.OnDestinationChangedListener destinationChangedListener;
+    NetworkCallback networkCallback;
+    private CompositeDisposable disposables;
 
     public BrowserFragment() {
         // Required empty public constructor
@@ -48,76 +55,149 @@ public class BrowserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerNetworkCallback();
-        fragmentManager = getChildFragmentManager();
-        if (savedInstanceState != null) {
-            if (fragmentManager.getFragment(savedInstanceState, "BookmarksFragment") == null) {
-                currentFragment = fragmentManager.getFragment(savedInstanceState, "DiscoverFragment");
-            } else {
-                currentFragment = fragmentManager.getFragment(savedInstanceState, "BookmarksFragment");
+        disposables = new CompositeDisposable();
+        networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onLost(@NonNull Network network) {
+                isNetworkConnected.onNext(false);
             }
-        } else {
-            currentFragment = new DiscoverFragment();
-        }
 
+            @Override
+            public void onUnavailable() {
+                isNetworkConnected.onNext(false);
+            }
+
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                isNetworkConnected.onNext(true);
+            }
+
+        };
+        registerNetworkCallback();
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public void onResume() {
+        super.onResume();
+        destinationChangedListener = (controller, destination, arguments) -> {
+            currentDestination.getValue().add(Objects.requireNonNull(
+                    destination
+                            .getLabel())
+                    .toString());
+            currentDestination.onNext(currentDestination.getValue());
+            Log.d("DestinationHistory", currentDestination.getValue().toString());
+        };
+        navController.addOnDestinationChangedListener(destinationChangedListener);
+    }
+
+    @Override
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBrowserBinding.inflate(inflater, container, false);
+        disposables.add(isNetworkConnected
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        this::changeColorBasedOnConnectivity
+                ));
+        disposables.add(
+                currentDestination
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                (currentHistory) -> {
+                                    if (currentHistory.size() > 1) {
+                                        String currentDestination = currentHistory
+                                                .get(currentHistory
+                                                        .size() - 1);
+                                        switch (currentHistory
+                                                .get(currentHistory
+                                                        .size() - 2)) {
+                                            case BOOKMARKS_FRAGMENT:
+                                                if (currentDestination
+                                                        .equals(BOOKMARKS_FRAGMENT)) {
+                                                    binding.appBarChildren.transitionToEnd();
+                                                } else {
+                                                    binding.appBarChildren.transitionToStart();
+                                                }
+                                                break;
+                                            case DISCOVER_FRAGMENT:
+                                                if (currentDestination
+                                                        .equals(NO_CONNECTION_FRAGMENT)) {
+                                                    binding.appBarChildren.transitionToStart();
+                                                } else if (!currentDestination
+                                                        .equals(DISCOVER_FRAGMENT)) {
+                                                    binding.appBarChildren.transitionToEnd();
+                                                }
 
-        fromBookmarksToDiscoverAnimation = RxAnimation.INSTANCE.sequentially(
-                Completable.fromObservable(RxAnimationExtensionKt.alpha(RxAnimation.INSTANCE.from(binding.movingDotRight), 0, 50L, null, null, false)),
-                Completable.fromObservable(RxAnimationExtensionKt.rangeFloat(RxAnimation.INSTANCE.from(binding.bookmarksButton), 20, 12, 50L, null, false, (size) -> {
-                    binding.bookmarksButton.setTextSize(size);
-                    return null;
-                })),
-                Completable.fromObservable(RxAnimationExtensionKt.alpha(RxAnimation.INSTANCE.from(binding.movingDot), 1, 100L, null, null, false)),
-                Completable.fromObservable(RxAnimationExtensionKt.rangeFloat(RxAnimation.INSTANCE.from(binding.discoverButton), 12, 20, 50L, null, false, (size) -> {
-                    binding.discoverButton.setTextSize(size);
-                    return null;
-                }))
-        );
-        fromDiscoverToBookmarksAnimation = RxAnimation.INSTANCE.sequentially(
-                Completable.fromObservable(RxAnimationExtensionKt.alpha(RxAnimation.INSTANCE.from(binding.movingDot), 0, 50L, null, null, false)),
-                Completable.fromObservable(RxAnimationExtensionKt.rangeFloat(RxAnimation.INSTANCE.from(binding.discoverButton), 20, 12, 50L, null, false, (size) -> {
-                    binding.discoverButton.setTextSize(size);
-                    return null;
-                })),
-                Completable.fromObservable(RxAnimationExtensionKt.alpha(RxAnimation.INSTANCE.from(binding.movingDotRight), 1, 100L, null, null, false)),
-                Completable.fromObservable(RxAnimationExtensionKt.rangeFloat(RxAnimation.INSTANCE.from(binding.bookmarksButton), 12, 20, 50L, null, false, (size) -> {
-                    binding.bookmarksButton.setTextSize(size);
-                    return null;
-                }))
-        );
+                                            case NO_CONNECTION_FRAGMENT:
+                                                if (currentDestination
+                                                        .equals(DISCOVER_FRAGMENT)) {
+                                                    binding.appBarChildren.transitionToStart();
+                                                } else if (currentDestination.equals(BOOKMARKS_FRAGMENT)) {
+                                                    binding.appBarChildren.transitionToEnd();
+                                                }
+                                        }
+                                    }
+                                }
+                        ));
 
         binding.discoverButton.setOnClickListener((view) -> {
-            if (!currentFragment.getTag().equals(DISCOVER_TAG)) {
-                fromBookmarksToDiscoverAnimation
-                        .subscribe();
-                currentFragment = new DiscoverFragment();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, currentFragment, DISCOVER_TAG)
-                        .addToBackStack(null)
-                        .commit();
-
+            if (!isConnected) {
+                if (currentDestination
+                        .getValue()
+                        .get(currentDestination.
+                                getValue()
+                                .size() - 1).equals(BOOKMARKS_FRAGMENT)) {
+                    navController
+                            .navigate(BookmarksFragmentDirections
+                                    .actionBookmarksFragmentToNoConnectionFragment());
+                } else {
+                    navController
+                            .navigate(NoConnectionFragmentDirections
+                                    .actionNoConnectionFragmentSelf());
+                }
             }
+
+            navigateToDestinationWhenCurrentIs(BOOKMARKS_FRAGMENT, BookmarksFragmentDirections
+                    .actionBookmarksFragmentToDiscoverFragment());
         });
         binding.bookmarksButton.setOnClickListener((view) -> {
-            if (!currentFragment.getTag().equals(BOOKMARKS_TAG)) {
-                fromDiscoverToBookmarksAnimation
-                        .subscribe();
-                currentFragment = new BookmarksFragment();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, currentFragment, BOOKMARKS_TAG)
-                        .addToBackStack(null)
-                        .commit();
+            switch (currentDestination
+                    .getValue()
+                    .get(currentDestination.
+                            getValue()
+                            .size() - 1)) {
+                case NO_CONNECTION_FRAGMENT:
+                    navController
+                            .navigate(NoConnectionFragmentDirections
+                                    .actionNoConnectionFragmentToBookmarksFragment());
+                    break;
+                case DISCOVER_FRAGMENT:
+                    navController
+                            .navigate(DiscoverFragmentDirections
+                                    .actionDiscoverFragmentToBookmarksFragment());
+                    break;
             }
         });
         return binding.getRoot();
     }
+
+    private void changeColorBasedOnConnectivity(Boolean isConnected) {
+        if (!isConnected) {
+            binding.movingDot.setBackground(
+                    getResources()
+                            .getDrawable(R.drawable.dot_background_grey,
+                                    getResources()
+                                            .newTheme()));
+        } else {
+            binding.movingDot.setBackground(
+                    getResources()
+                            .getDrawable(R.drawable.dot_background_red,
+                                    getResources().newTheme()
+                            )
+            );
+        }
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -125,92 +205,90 @@ public class BrowserFragment extends Fragment {
         disposables.add(
                 isNetworkConnected
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(isConnected -> {
-                            if (isConnected) {
-                                switch (fragmentBeforeInternetLost) {
-                                    case DISCOVER_TAG:
-                                        if (currentFragment instanceof DiscoverFragment) {
-                                            fragmentManager.beginTransaction()
-                                                    .replace(R.id.fragment_container, currentFragment, DISCOVER_TAG)
-                                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                                    .addToBackStack(null)
-                                                    .commit();
-                                        } else {
-                                            currentFragment = new DiscoverFragment();
-                                            fragmentManager.beginTransaction()
-                                                    .replace(R.id.fragment_container, currentFragment, DISCOVER_TAG)
-                                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                                    .addToBackStack(null)
-                                                    .commit();
-                                        }
-                                        break;
-                                    case BOOKMARKS_TAG:
-                                        if (currentFragment instanceof BookmarksFragment) {
-                                            fragmentManager.beginTransaction()
-                                                    .replace(R.id.fragment_container, currentFragment, BOOKMARKS_TAG)
-                                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                                    .addToBackStack(null)
-                                                    .commit();
-                                        } else {
-                                            currentFragment = new BookmarksFragment();
-                                            fragmentManager.beginTransaction()
-                                                    .replace(R.id.fragment_container, currentFragment, BOOKMARKS_TAG)
-                                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                                    .addToBackStack(null)
-                                                    .commit();
-                                        }
-                                        break;
-                                }
-
+                        .subscribe(connected -> {
+                            isConnected = connected;
+                            if (!connected) {
+                                navigateToDestinationWhenCurrentIs(DISCOVER_FRAGMENT,
+                                        DiscoverFragmentDirections
+                                                .actionDiscoverFragmentToNoConnectionFragment());
                             } else {
-                                fragmentBeforeInternetLost = currentFragment.getTag();
-                                // dispatch a notification here to encourage checking bookmarks
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.fragment_container, noConnectionFragment, "no_connection_fragment")
-                                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                        .commit();
+                                navigateToDestinationWhenCurrentIs(NO_CONNECTION_FRAGMENT,
+                                        NoConnectionFragmentDirections
+                                                .actionNoConnectionFragmentToDiscoverFragment());
                             }
                         }));
+    }
+
+    private void navigateToDestinationWhenCurrentIs(
+            String currentFragment,
+            NavDirections destination) {
+        if (currentDestination
+                .getValue()
+                .get(currentDestination
+                        .getValue()
+                        .size() - 1)
+                .equals(currentFragment)) {
+            navController
+                    .navigate(destination);
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = NavHostFragment
+                .findNavController(Objects.requireNonNull(getChildFragmentManager()
+                        .findFragmentById(R.id.browser_nav_host_fragment)));
+        navController.restoreState(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (currentFragment.getTag().equals(DISCOVER_TAG)) {
-            fragmentManager.putFragment(outState, "DiscoverFragment", currentFragment);
-        } else {
-            fragmentManager.putFragment(outState, "BookmarksFragment", currentFragment);
-        }
+        navController.saveState();
     }
 
     public void registerNetworkCallback() {
         try {
-            ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-            connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
-                @Override
-                public void onLost(@NonNull Network network) {
-                    isNetworkConnected.onNext(false);
-                }
-
-                @Override
-                public void onUnavailable() {
-                    isNetworkConnected.onNext(false);
-                }
-
-                @Override
-                public void onAvailable(@NonNull Network network) {
-                    isNetworkConnected.onNext(true);
-                }
-
-            });
+            ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity()
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            Objects.requireNonNull(connectivityManager)
+                    .registerDefaultNetworkCallback(networkCallback);
         } catch (Exception e) {
             isNetworkConnected.onNext(false);
         }
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void toReaderFromDiscover(String apiUrl) {
+        Navigation
+                .findNavController(requireActivity(), R.id.nav_host_fragment)
+                .navigate(BrowserFragmentDirections
+                        .actionBrowserFragmentToReaderFragment(apiUrl));
+    }
+
+    @Override
+    public void toReaderFromBookmarks(String apiUrl) {
+        Navigation
+                .findNavController(requireActivity(), R.id.nav_host_fragment)
+                .navigate(BrowserFragmentDirections
+                        .actionBrowserFragmentToReaderFragment(apiUrl));
+    }
+
+    @Override
+    public void onPause() {
+        navController
+                .removeOnDestinationChangedListener(destinationChangedListener);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
         disposables.clear();
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        Objects.requireNonNull(connectivityManager)
+                .unregisterNetworkCallback(networkCallback);
+        super.onDestroy();
     }
 }

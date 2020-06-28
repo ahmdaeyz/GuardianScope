@@ -1,13 +1,11 @@
 package dev.ahmdaeyz.guardianscope.ui.browser.discover.sections;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,35 +13,34 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 import dev.ahmdaeyz.guardianscope.R;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentSectionsBinding;
-import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
+import dev.ahmdaeyz.guardianscope.ui.browser.discover.DelegateToBrowser;
 import io.reactivex.disposables.CompositeDisposable;
 
 
 public class SectionsFragment extends Fragment {
-    private FragmentSectionsBinding binding;
-    private SectionsArticlesAdapter adapter;
+    private static final String TAG = "SectionsFragment";
     private SectionsViewModel viewModel;
     private CompositeDisposable disposable = new CompositeDisposable();
-    private NavigateFrom.Browsers navigateFromDiscover;
+    private DelegateToBrowser delegateToBrowser;
 
     public SectionsFragment() {
         // Required empty public constructor
     }
 
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public void attachingToParentFragment(Fragment fragment) {
         try {
-            navigateFromDiscover = (NavigateFrom.Browsers) context;
+            delegateToBrowser = (DelegateToBrowser) fragment;
         } catch (ClassCastException e) {
-            Log.e("SectionsFragment", "Parent Activity must implement NavigateFrom.Browsers.Discover");
+            Log.e(TAG, "attachingToParentFragment: ", e);
         }
     }
 
@@ -53,17 +50,18 @@ public class SectionsFragment extends Fragment {
         ArticlesRepository articlesRepository = ArticlesRepositoryImpl.getInstance();
         SectionsViewModelFactory factory = new SectionsViewModelFactory(articlesRepository);
         viewModel = new ViewModelProvider(this, factory).get(SectionsViewModel.class);
+        attachingToParentFragment(getParentFragment());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentSectionsBinding.inflate(inflater, container, false);
-        adapter = new SectionsArticlesAdapter();
+        FragmentSectionsBinding binding = FragmentSectionsBinding.inflate(inflater, container, false);
+        SectionsArticlesAdapter adapter = new SectionsArticlesAdapter();
         binding.articlesList.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         binding.articlesList.setLayoutManager(layoutManager);
-        setTextAppearanceOfCurrentSectionChip();
+        setTextAppearanceOfCurrentSectionChip(binding);
         viewModel.setSections(Arrays.asList("politics", "fashion", "environment", "education", "media", "food"));
         viewModel.articles.observe(getViewLifecycleOwner(), (articles) -> {
             binding.spinKit.setVisibility(View.GONE);
@@ -75,12 +73,12 @@ public class SectionsFragment extends Fragment {
             }
         });
         adapter.setOnItemClickListener((view, article) -> {
-            navigateFromDiscover.toReader(article.getApiUrl());
+            delegateToBrowser.delegate(article.getApiUrl());
         });
         return binding.getRoot();
     }
 
-    private void setTextAppearanceOfCurrentSectionChip() {
+    private void setTextAppearanceOfCurrentSectionChip(FragmentSectionsBinding binding) {
         binding.sectionsChips.setOnCheckedChangeListener((group, checkedId) -> {
             Chip[] chips = {binding.educationChip, binding.environmentChip, binding.fashionChip, binding.mediaChip, binding.politicsChip, binding.foodChip};
             Chip checkedChip = binding.getRoot().findViewById(checkedId);
