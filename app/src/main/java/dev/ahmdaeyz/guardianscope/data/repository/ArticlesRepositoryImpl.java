@@ -2,6 +2,8 @@ package dev.ahmdaeyz.guardianscope.data.repository;
 
 import android.util.Log;
 
+import org.threeten.bp.LocalDate;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -15,14 +17,23 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class ArticlesRepositoryImpl implements ArticlesRepository {
+public class ArticlesRepositoryImpl {
     private final NetworkService networkService;
     private final BookmarkedArticlesDao bookmarkedArticlesDao;
     private static ArticlesRepositoryImpl INSTANCE;
+    private int syncPeriod = 30;
+    private boolean shouldKeepBookmarks = true;
 
     private ArticlesRepositoryImpl(NetworkService networkService, BookmarkedArticlesDao bookmarkedArticlesDao) {
         this.networkService = networkService;
         this.bookmarkedArticlesDao = bookmarkedArticlesDao;
+        if (!shouldKeepBookmarks) {
+            deleteWeekAgoBookmarks(
+                    LocalDate
+                            .now()
+                            .minusWeeks(1)
+                            .toEpochDay()).subscribe();
+        }
     }
 
     public static ArticlesRepositoryImpl initRepository(NetworkService networkService, BookmarkedArticlesDao bookmarkedArticlesDao) {
@@ -42,15 +53,13 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
         }
     }
 
-    @Override
     public Observable<List<Article>> getTrendingArticles() {
-        return Observable.interval(0, 30, TimeUnit.MINUTES)
+        return Observable.interval(0, syncPeriod, TimeUnit.MINUTES)
                 .flatMap((time) -> networkService
                         .getHeadlineArticles()
                         .toObservable());
     }
 
-    @Override
     public Observable<List<Article>> getSectionsArticles(List<String> sections) {
         return Observable.interval(0, 30, TimeUnit.MINUTES)
                 .flatMap((time) -> networkService
@@ -59,17 +68,14 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
                 .doOnNext((articles -> Log.d("Repository", articles.toString())));
     }
 
-    @Override
     public Completable bookMarkArticle(ArticleWithBody article) {
         return bookmarkedArticlesDao.bookmarkArticle(article).subscribeOn(Schedulers.io());
     }
 
-    @Override
     public Completable unBookmarkArticle(ArticleWithBody article) {
         return bookmarkedArticlesDao.unBookmarkArticle(article).subscribeOn(Schedulers.io());
     }
 
-    @Override
     public Observable<List<? extends ArticleWithBody>> getBookmarks() {
         return bookmarkedArticlesDao.getBookmarked()
                 .flatMap((articleWithBodies -> Observable.fromIterable(articleWithBodies)
@@ -77,13 +83,11 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
                         .toObservable().subscribeOn(Schedulers.io())));
     }
 
-    @Override
     public Observable<List<ArticleWithBody>> search(String keyword) {
         return bookmarkedArticlesDao.search("%" + keyword + "%")
                 .subscribeOn(Schedulers.io());
     }
 
-    @Override
     public Single<ArticleWithBody> getArticle(String apiUrl) {
         return bookmarkedArticlesDao.getBookmarkedArticle(apiUrl)
                 .map((article -> {
@@ -96,4 +100,16 @@ public class ArticlesRepositoryImpl implements ArticlesRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    private Completable deleteWeekAgoBookmarks(long aWeekAgo) {
+        return bookmarkedArticlesDao.deleteWeekAgoBookmarks(aWeekAgo)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public void setSyncPeriod(int syncPeriod) {
+        this.syncPeriod = syncPeriod;
+    }
+
+    public void toggleKeepBookmarks() {
+        this.shouldKeepBookmarks = !shouldKeepBookmarks;
+    }
 }

@@ -26,9 +26,9 @@ import java.util.Objects;
 import dev.ahmdaeyz.guardianscope.R;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentBrowserBinding;
 import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
-import dev.ahmdaeyz.guardianscope.ui.NoConnectionFragmentDirections;
 import dev.ahmdaeyz.guardianscope.ui.browser.bookmarks.BookmarksFragmentDirections;
 import dev.ahmdaeyz.guardianscope.ui.browser.discover.DiscoverFragmentDirections;
+import dev.ahmdaeyz.guardianscope.ui.browser.noconnection.NoConnectionFragmentDirections;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
@@ -39,9 +39,7 @@ import static dev.ahmdaeyz.guardianscope.ui.browser.common.FragmentsLabels.DISCO
 import static dev.ahmdaeyz.guardianscope.ui.browser.common.FragmentsLabels.NO_CONNECTION_FRAGMENT;
 
 public class BrowserFragment extends Fragment implements NavigateFrom.Browsers {
-    private FragmentBrowserBinding binding;
     private BehaviorSubject<Boolean> isNetworkConnected = BehaviorSubject.createDefault(false);
-    boolean isConnected = false;
     NavController navController;
     BehaviorSubject<List<String>> currentDestination = BehaviorSubject.createDefault(new ArrayList<>());
     NavController.OnDestinationChangedListener destinationChangedListener;
@@ -93,16 +91,17 @@ public class BrowserFragment extends Fragment implements NavigateFrom.Browsers {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentBrowserBinding.inflate(inflater, container, false);
+        FragmentBrowserBinding binding = FragmentBrowserBinding.inflate(inflater, container, false);
         disposables.add(isNetworkConnected
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        this::changeColorBasedOnConnectivity
-                ));
+                .subscribe((isConnected) -> {
+                    changeColorBasedOnConnectivity(binding, isConnected);
+                }));
         disposables.add(
                 currentDestination
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
+                                //region Handle Animation based on currentDestination
                                 (currentHistory) -> {
                                     if (currentHistory.size() > 1) {
                                         String currentDestination = currentHistory
@@ -138,10 +137,14 @@ public class BrowserFragment extends Fragment implements NavigateFrom.Browsers {
                                         }
                                     }
                                 }
+                                //endregion
                         ));
+        binding.preferencesButton.setOnClickListener((view) -> {
+            toSettingsFromMain();
+        });
 
         binding.discoverButton.setOnClickListener((view) -> {
-            if (!isConnected) {
+            if (!isNetworkConnected.getValue()) {
                 if (currentDestination
                         .getValue()
                         .get(currentDestination.
@@ -181,7 +184,7 @@ public class BrowserFragment extends Fragment implements NavigateFrom.Browsers {
         return binding.getRoot();
     }
 
-    private void changeColorBasedOnConnectivity(Boolean isConnected) {
+    private void changeColorBasedOnConnectivity(FragmentBrowserBinding binding, Boolean isConnected) {
         if (!isConnected) {
             binding.movingDot.setBackground(
                     getResources()
@@ -206,7 +209,6 @@ public class BrowserFragment extends Fragment implements NavigateFrom.Browsers {
                 isNetworkConnected
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(connected -> {
-                            isConnected = connected;
                             if (!connected) {
                                 navigateToDestinationWhenCurrentIs(DISCOVER_FRAGMENT,
                                         DiscoverFragmentDirections
@@ -276,6 +278,14 @@ public class BrowserFragment extends Fragment implements NavigateFrom.Browsers {
     }
 
     @Override
+    public void toSettingsFromMain() {
+        Navigation
+                .findNavController(requireActivity(), R.id.nav_host_fragment)
+                .navigate(BrowserFragmentDirections.actionBrowserFragmentToSettingsFragment());
+    }
+
+
+    @Override
     public void onPause() {
         navController
                 .removeOnDestinationChangedListener(destinationChangedListener);
@@ -283,8 +293,13 @@ public class BrowserFragment extends Fragment implements NavigateFrom.Browsers {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         disposables.clear();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
         ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         Objects.requireNonNull(connectivityManager)

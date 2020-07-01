@@ -15,7 +15,6 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;
 
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentBookmarksBinding;
 import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
@@ -43,7 +42,7 @@ public class BookmarksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArticlesRepository repository = ArticlesRepositoryImpl.getInstance();
+        ArticlesRepositoryImpl repository = ArticlesRepositoryImpl.getInstance();
         BookmarksViewModelFactory factory = new BookmarksViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(BookmarksViewModel.class);
         attachingToParentFragment(getParentFragment().getParentFragment());

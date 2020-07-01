@@ -9,18 +9,18 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
+import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 class TrendingViewModel extends ViewModel {
-    final private ArticlesRepository repository;
+    final private ArticlesRepositoryImpl repository;
     private CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<List<Article>> _articles = new MutableLiveData<>();
     public LiveData<List<Article>> articles = _articles;
 
-    public TrendingViewModel(ArticlesRepository articlesRepository) {
+    public TrendingViewModel(ArticlesRepositoryImpl articlesRepository) {
         this.repository = articlesRepository;
         getArticles();
     }

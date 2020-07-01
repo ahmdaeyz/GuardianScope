@@ -8,7 +8,7 @@ public class ArticleWithBody extends Article {
     private String body;
     private boolean isBookmarked;
 
-    public ArticleWithBody(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, String apiUrl, String headline, String author, Integer wordCount, String thumbnail, Boolean isLive, String body) {
+    public ArticleWithBody(String id, String sectionName, long webPublicationDate, String webTitle, String webUrl, String apiUrl, String headline, String author, Integer wordCount, String thumbnail, Boolean isLive, String body) {
         super(id,
                 sectionName,
                 webPublicationDate,

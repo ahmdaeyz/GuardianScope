@@ -11,6 +11,8 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.Interceptor;
 
+import static dev.ahmdaeyz.guardianscope.util.date.DateMethods.dateToFromEpoch;
+
 public class GuardianScopeNetworkService implements NetworkService {
     private TheGuardianAPIBuilder theGuardianAPIBuilder;
     private TheGuardianAPI networkAPI;
@@ -28,7 +30,7 @@ public class GuardianScopeNetworkService implements NetworkService {
                 .flatMap((articlesResponse) -> Observable.fromIterable(articlesResponse.getResponse().getResults())
                         .map((resultsItem -> new Article(resultsItem.getId(),
                                 resultsItem.getSectionName(),
-                                resultsItem.getWebPublicationDate(),
+                                dateToFromEpoch(resultsItem.getWebPublicationDate()),
                                 resultsItem.getWebTitle(),
                                 resultsItem.getWebUrl(),
                                 resultsItem.getApiUrl(),
@@ -51,7 +53,7 @@ public class GuardianScopeNetworkService implements NetworkService {
                 .flatMap((articlesResponse) -> Observable.fromIterable(articlesResponse.getResponse().getResults())
                         .map((resultsItem -> new Article(resultsItem.getId(),
                                 resultsItem.getSectionName(),
-                                resultsItem.getWebPublicationDate(),
+                                dateToFromEpoch(resultsItem.getWebPublicationDate()),
                                 resultsItem.getWebTitle(),
                                 resultsItem.getWebUrl(),
                                 resultsItem.getApiUrl(),
@@ -73,7 +75,7 @@ public class GuardianScopeNetworkService implements NetworkService {
             return Single.just(new ArticleWithBody(
                     articleContent.getId(),
                     articleContent.getSectionName(),
-                    articleContent.getWebPublicationDate(),
+                    dateToFromEpoch(articleContent.getWebPublicationDate()),
                     articleContent.getWebTitle(),
                     articleContent.getWebUrl(),
                     articleContent.getApiUrl(),

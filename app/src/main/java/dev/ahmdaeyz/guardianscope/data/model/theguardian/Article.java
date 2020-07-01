@@ -10,7 +10,7 @@ import org.parceler.ParcelConstructor;
 public class Article {
     private String id;
     private String sectionName;
-    private String webPublicationDate;
+    private long webPublicationDate;
     private String webTitle;
     private String webUrl;
     @PrimaryKey
@@ -23,7 +23,7 @@ public class Article {
     private Boolean isLive;
 
     @ParcelConstructor
-    public Article(String id, String sectionName, String webPublicationDate, String webTitle, String webUrl, String apiUrl, String headline, String author, Integer wordCount, String thumbnail, Boolean isLive) {
+    public Article(String id, String sectionName, long webPublicationDate, String webTitle, String webUrl, String apiUrl, String headline, String author, Integer wordCount, String thumbnail, Boolean isLive) {
         this.id = id;
         this.sectionName = sectionName;
         this.webPublicationDate = webPublicationDate;
@@ -45,7 +45,7 @@ public class Article {
         return sectionName;
     }
 
-    public String getWebPublicationDate() {
+    public long getWebPublicationDate() {
         return webPublicationDate;
     }
 

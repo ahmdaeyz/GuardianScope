@@ -7,16 +7,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
+import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import io.reactivex.disposables.CompositeDisposable;
 
 class ReaderViewModel extends ViewModel {
-    final ArticlesRepository repository;
+    final ArticlesRepositoryImpl repository;
     final CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<ArticleWithBody> _article = new MutableLiveData<>();
     LiveData<ArticleWithBody> article = _article;
 
-    public ReaderViewModel(ArticlesRepository repository) {
+    public ReaderViewModel(ArticlesRepositoryImpl repository) {
         this.repository = repository;
     }
 

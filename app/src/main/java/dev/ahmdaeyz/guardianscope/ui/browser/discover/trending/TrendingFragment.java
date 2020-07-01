@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import dev.ahmdaeyz.guardianscope.R;
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentTrendingBinding;
 import dev.ahmdaeyz.guardianscope.ui.browser.discover.DelegateToBrowser;
@@ -35,7 +34,7 @@ public class TrendingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArticlesRepository articlesRepository = ArticlesRepositoryImpl.getInstance();
+        ArticlesRepositoryImpl articlesRepository = ArticlesRepositoryImpl.getInstance();
         TrendingViewModelFactory factory = new TrendingViewModelFactory(articlesRepository);
         viewModel = new ViewModelProvider(this, factory).get(TrendingViewModel.class);
         attachingToParentFragment(getParentFragment());

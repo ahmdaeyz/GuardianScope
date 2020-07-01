@@ -4,7 +4,7 @@ public class EmptyArticle extends ArticleWithBody {
     public EmptyArticle() {
         super("",
                 "",
-                "",
+                0,
                 "",
                 "",
                 "",

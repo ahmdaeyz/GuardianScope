@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/noConnectionFragment"
-        android:name="dev.ahmdaeyz.guardianscope.ui.NoConnectionFragment"
+        android:name="dev.ahmdaeyz.guardianscope.ui.browser.noconnection.NoConnectionFragment"
         android:label="fragment_no_connection"
         tools:layout="@layout/fragment_no_connection">
         <action

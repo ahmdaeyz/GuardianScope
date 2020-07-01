@@ -5,27 +5,21 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import dev.ahmdaeyz.guardianscope.R;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class Binding {
 
-    public static String formatDate(String nonFormattedDate) {
-        SimpleDateFormat adaptFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat myFormatter = new SimpleDateFormat("MMM dd,yyyy");
-        String formattedDate = "";
-        try {
-            Date date = adaptFormat.parse(nonFormattedDate.replace(nonFormattedDate.substring(nonFormattedDate.indexOf("T")), ""));
-            if (date != null) {
-                formattedDate = myFormatter.format(date);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public static String formatDate(long fromEpoch) {
+//        SimpleDateFormat adaptFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateTimeFormatter myFormatter = DateTimeFormatter.ofPattern("MMM dd,yyyy");
+        String formattedDate;
+        LocalDate date = LocalDate.ofEpochDay(fromEpoch);
+        formattedDate = myFormatter.format(date);
+
         return formattedDate;
     }
 

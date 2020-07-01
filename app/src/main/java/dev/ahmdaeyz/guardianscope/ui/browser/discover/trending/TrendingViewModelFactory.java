@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
+import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 
 class TrendingViewModelFactory implements ViewModelProvider.Factory {
-    final private ArticlesRepository articlesRepository;
+    final private ArticlesRepositoryImpl articlesRepository;
 
-    TrendingViewModelFactory(ArticlesRepository articlesRepository) {
+    TrendingViewModelFactory(ArticlesRepositoryImpl articlesRepository) {
         this.articlesRepository = articlesRepository;
     }
 

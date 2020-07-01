@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
+import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 
 class BookmarksViewModelFactory implements ViewModelProvider.Factory {
-    final ArticlesRepository repository;
+    final ArticlesRepositoryImpl repository;
 
-    BookmarksViewModelFactory(ArticlesRepository repository) {
+    BookmarksViewModelFactory(ArticlesRepositoryImpl repository) {
         this.repository = repository;
     }
 
