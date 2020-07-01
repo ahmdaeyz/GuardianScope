@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/general_header">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            app:key="@string/dark_mode_key"
+            app:title="@string/dark_mode_title" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            app:key="@string/keep_bookmarks_key"
+            app:title="@string/keep_bookmarks_title" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/sync_header">
+        <DropDownPreference
+            app:defaultValue="30"
+            app:entries="@array/sync_period_entries"
+            app:entryValues="@array/sync_period_values"
+            app:key="@string/sync_period_key"
+            app:title="@string/sync_period_title"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+</PreferenceScreen>

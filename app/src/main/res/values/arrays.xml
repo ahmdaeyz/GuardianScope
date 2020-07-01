@@ -1,0 +1,43 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="sync_on_entries">
+        <item>Wifi Only</item>
+        <item>Wifi or Data</item>
+    </string-array>
+
+    <string-array name="sync_on_values">
+        <item>wifi_only</item>
+        <item>wifi_or_data</item>
+    </string-array>
+    <string-array name="sync_period_entries">
+        <item>20min</item>
+        <item>30min</item>
+        <item>40min</item>
+        <item>50min</item>
+        <item>60min</item>
+    </string-array>
+    <string-array name="sync_period_values">
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+    </string-array>
+    <string-array name="all_categories_entries">
+        <item>Politics</item>
+        <item>Fashion</item>
+        <item>Environment</item>
+        <item>Education</item>
+        <item>Media</item>
+        <item>Food</item>
+    </string-array>
+    <string-array name="all_categories_values">
+        <item>politics</item>
+        <item>fashion</item>
+        <item>environment</item>
+        <item>education</item>
+        <item>media</item>
+        <item>food</item>
+    </string-array>
+
+</resources>

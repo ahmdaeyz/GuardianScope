@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.Article;
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
+import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -19,7 +19,7 @@ import io.reactivex.subjects.BehaviorSubject;
 
 class SectionsViewModel extends ViewModel {
 
-    private final ArticlesRepository repository;
+    private final ArticlesRepositoryImpl repository;
     public BehaviorSubject<String> currentSection;
     private CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<List<Article>> _articles = new MutableLiveData<>();
@@ -27,7 +27,7 @@ class SectionsViewModel extends ViewModel {
     private BehaviorSubject<List<Article>> internalArticles;
     private BehaviorSubject<List<String>> sections = BehaviorSubject.create();
 
-    public SectionsViewModel(ArticlesRepository articlesRepository) {
+    public SectionsViewModel(ArticlesRepositoryImpl articlesRepository) {
         this.repository = articlesRepository;
         this.currentSection = BehaviorSubject.createDefault("Politics");
         this.internalArticles = BehaviorSubject.create();

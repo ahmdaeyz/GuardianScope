@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 import dev.ahmdaeyz.guardianscope.R;
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentSectionsBinding;
 import dev.ahmdaeyz.guardianscope.ui.browser.discover.DelegateToBrowser;
@@ -47,7 +46,7 @@ public class SectionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArticlesRepository articlesRepository = ArticlesRepositoryImpl.getInstance();
+        ArticlesRepositoryImpl articlesRepository = ArticlesRepositoryImpl.getInstance();
         SectionsViewModelFactory factory = new SectionsViewModelFactory(articlesRepository);
         viewModel = new ViewModelProvider(this, factory).get(SectionsViewModel.class);
         attachingToParentFragment(getParentFragment());

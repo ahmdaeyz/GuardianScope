@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_browserFragment_to_readerFragment"
             app:destination="@id/readerFragment" />
+        <action
+            android:id="@+id/action_browserFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/readerFragment"
@@ -25,4 +28,8 @@
             android:id="@+id/action_readerFragment_to_browserFragment"
             app:destination="@id/browserFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="dev.ahmdaeyz.guardianscope.ui.settings.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

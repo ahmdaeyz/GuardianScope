@@ -39,9 +39,6 @@
             motion:layout_constraintHorizontal_bias="1"
             motion:layout_constraintStart_toStartOf="@id/discover_button"
             motion:layout_constraintTop_toTopOf="parent">
-            <!--            <Transform-->
-            <!--                android:translationZ="20dp"-->
-            <!--                />-->
         </Constraint>
     </ConstraintSet>
 </MotionScene>

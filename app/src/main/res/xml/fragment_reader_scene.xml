@@ -76,7 +76,7 @@
         <Constraint android:id="@id/app_bar">
             <CustomAttribute
                 motion:attributeName="background"
-                motion:customColorDrawableValue="@android:color/white" />
+                motion:customColorDrawableValue="@color/colorPrimary" />
         </Constraint>
     </ConstraintSet>
 </MotionScene>

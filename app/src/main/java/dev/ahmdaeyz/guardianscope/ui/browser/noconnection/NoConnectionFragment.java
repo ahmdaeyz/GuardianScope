@@ -1,4 +1,4 @@
-package dev.ahmdaeyz.guardianscope.ui;
+package dev.ahmdaeyz.guardianscope.ui.browser.noconnection;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

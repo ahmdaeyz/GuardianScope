@@ -1,15 +1,12 @@
 package dev.ahmdaeyz.guardianscope.ui.reader;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -21,10 +18,8 @@ import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 
 import dev.ahmdaeyz.guardianscope.R;
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
 import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import dev.ahmdaeyz.guardianscope.databinding.FragmentReaderBinding;
-import dev.ahmdaeyz.guardianscope.navigation.NavigateFrom;
 
 import static dev.ahmdaeyz.guardianscope.ui.browser.common.Binding.formatDate;
 
@@ -33,8 +28,6 @@ public class ReaderFragment extends Fragment {
 
     private static final String ARG_API_URL = "apiUrl";
     private String apiUrl;
-    private FragmentReaderBinding binding;
-    private NavigateFrom.Reader navigateFromReader;
     private ReaderViewModel viewModel;
     private String webUrl;
 
@@ -51,23 +44,12 @@ public class ReaderFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            navigateFromReader = (NavigateFrom.Reader) context;
-        } catch (ClassCastException e) {
-            Log.e("ReaderFragment", "Parent Activity must implement NavigateFrom.Reader");
-        }
-
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             apiUrl = getArguments().getString(ARG_API_URL);
         }
-        ArticlesRepository repository = ArticlesRepositoryImpl.getInstance();
+        ArticlesRepositoryImpl repository = ArticlesRepositoryImpl.getInstance();
         ReaderViewModelFactory factory = new ReaderViewModelFactory(repository);
         viewModel = new ViewModelProvider(this, factory).get(ReaderViewModel.class);
         viewModel.apiUrlIs(apiUrl);
@@ -76,14 +58,14 @@ public class ReaderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentReaderBinding.inflate(inflater, container, false);
+        FragmentReaderBinding binding = FragmentReaderBinding.inflate(inflater, container, false);
 
         viewModel.article.observe(getViewLifecycleOwner(), (article) -> {
             if (article != null) {
-                bindArticle(article);
+                bindArticle(binding, article);
                 webUrl = article.getWebUrl();
             } else {
-                disableButtons();
+                disableButtons(binding);
             }
         });
         binding.goBackButton.setOnClickListener((view) -> {
@@ -139,7 +121,7 @@ public class ReaderFragment extends Fragment {
         return "Read this interesting article at " + webTitle;
     }
 
-    private void bindArticle(ArticleWithBody article) {
+    private void bindArticle(FragmentReaderBinding binding, ArticleWithBody article) {
         binding.articleBody.setHtml(article.getBody(), new HtmlHttpImageGetter(binding.articleBody));
         binding.articleBody.setRemoveTrailingWhiteSpace(true);
         Glide.with(binding.articleImage)
@@ -156,7 +138,7 @@ public class ReaderFragment extends Fragment {
         }
     }
 
-    private void disableButtons() {
+    private void disableButtons(FragmentReaderBinding binding) {
         binding.bookmarkButton.setEnabled(false);
         binding.shareToTwitterButton.setEnabled(false);
         binding.shareButton.setEnabled(false);

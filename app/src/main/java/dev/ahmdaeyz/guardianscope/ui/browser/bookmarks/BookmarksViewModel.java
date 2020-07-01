@@ -9,17 +9,17 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import dev.ahmdaeyz.guardianscope.data.model.theguardian.ArticleWithBody;
-import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepository;
+import dev.ahmdaeyz.guardianscope.data.repository.ArticlesRepositoryImpl;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 class BookmarksViewModel extends ViewModel {
-    final ArticlesRepository repository;
+    final ArticlesRepositoryImpl repository;
     CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<List<ArticleWithBody>> _bookmarks = new MutableLiveData<>();
     public LiveData<List<ArticleWithBody>> bookmarks = _bookmarks;
 
-    public BookmarksViewModel(ArticlesRepository repository) {
+    public BookmarksViewModel(ArticlesRepositoryImpl repository) {
 
         this.repository = repository;
         initBookmarks();

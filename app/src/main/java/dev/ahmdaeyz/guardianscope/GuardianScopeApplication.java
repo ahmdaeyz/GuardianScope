@@ -20,7 +20,6 @@ public class GuardianScopeApplication extends Application {
         super.onCreate();
         AndroidThreeTen.init(this);
         initializeSingletons();
-
     }
 
     void initializeSingletons() {
